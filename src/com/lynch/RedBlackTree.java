@@ -93,16 +93,44 @@ public class RedBlackTree<K,V> {
         // 1. 若当前处理根节点只有新增节点，则上黑下红
         // 2. 若当前处理根节点只有新增节点，则上黑下红
 
+        return null;
     }
 
+    private Node<K,V> getParent(Node<K,V> node) {
+        return node == null ? null : node.parent;
+    }
 
+    private Node<K,V> getLeft(Node<K,V> node) {
+        return node == null ? null : node.left;
+    }
+
+    private Node<K,V> getRight(Node<K,V> node) {
+        return node == null ? null : node.right;
+    }
 
     /**
-     * 1. 2-3-4树：新增
-     * @param node
+     * 1. 2-3-4树：新增元素 + 2节点合并（节点钟只有一个元素），合并后等于三节点
+     *      红黑树：新增红节点 + 黑色父节点 = 上黑下红 -- 无需调整
+     * 2. 2-3-4树：新增元素 + 3节点合并（节点钟有两个元素），
+     *    此时分四种情况： 左三，右三，及两个左中右（无需调整）
+     *    红黑树： 新增红色节点 + 上黑下红 = 排序后中间节点为黑色，两边节点为红色
+     * 3. 2-3-4树：新增元素 +    4节点合并 = 原来4节点分裂，中间节点升级为父节点，新增元素与剩下的其中一个合并
+     *    红黑树： 新增红色节点 + 爷爷节点黑色，父节点及父节点的兄弟节点都是红色 = 爷爷节点变为红色，父节点及其兄弟节点变黑色。若爷爷节点不是根节点则继续遍历
+     *
+     * @param x
      */
-    private void adjust(Node<K,V> node){
+    private void adjust(Node<K,V> x) {
 
+        /**
+         * 只有父节点为红色才需要调整，为黑色则无需调整, 对应的情况是 2 及 3
+         */
+        if (x != null && x != root && x.parent.color == RED) {
+            // x的父节点为爷爷的左子树
+            Node parent = getParent(x);
+            if (parent == getLeft()) {
+
+            }
+        }
     }
 
     private void check(Node node) {
