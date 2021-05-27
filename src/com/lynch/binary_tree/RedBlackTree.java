@@ -12,15 +12,17 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 public class RedBlackTree<K extends Comparable<?>,V> {
 
+
+
     public static void main(String[] args) {
 
         List<Integer> list = Arrays.asList(2,7,5,9,1,12,10,25,19,6,3,5);
         RedBlackTree<Integer,Integer> tree = new RedBlackTree<>();
         for(Integer item : list){
             tree.insert(item);
-            print(tree.root);
+//            print(tree.root);
         }
-
+        print(tree.root);
     }
 
     private static void print(RBTreeNode root){
