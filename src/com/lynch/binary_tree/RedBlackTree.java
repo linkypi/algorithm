@@ -1,18 +1,15 @@
 package com.lynch.binary_tree;
 
 import com.lynch.binary_tree.common.RBTreeNode;
-import com.lynch.binary_tree.common.RBTreeNode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.fusesource.jansi.Ansi.Color.BLACK;
 import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
 
-public class RedBlackTree<K extends Comparable<?>,V> {
-
-
+public class RedBlackTree<K extends Comparable<K>,V> {
 
     public static void main(String[] args) {
 
@@ -35,7 +32,11 @@ public class RedBlackTree<K extends Comparable<?>,V> {
             }
         });
     }
-    
+
+    public RBTreeNode<K, V> getRoot() {
+        return root;
+    }
+
     private RBTreeNode<K, V> root = null;
 
     public void insert(K key) {
@@ -209,21 +210,6 @@ public class RedBlackTree<K extends Comparable<?>,V> {
         root.setColor(RBTreeNode.BLACK);
     }
 
-    private void check(RBTreeNode<K,V> node) {
-        RBTreeNode<K,V> parent = node.getParent();
-        // 若插入节点的父节点为红色，并且父节点的兄弟节点同为红色 则调整颜色
-        // 1. 将父节点及父节点的兄弟节点的颜色改为黑色
-        // 2. 将祖父节点的颜色改为红色
-        RBTreeNode<K,V> brotherOfParent = getBrother(parent);
-        if (parent.getColor() == RBTreeNode.RED && brotherOfParent.getColor() == RBTreeNode.RED) {
-            parent.setColor(RBTreeNode.BLACK);
-            brotherOfParent.setColor(RBTreeNode.BLACK);
-            parent.getParent().setColor(RBTreeNode.RED);
-        }
-
-        // 若上述条件满足则继续往上层查找
-    }
-
     private RBTreeNode<K,V> getBrother(RBTreeNode<K,V> node) {
         RBTreeNode<K, V> parent = node.getParent();
         if (parent == null) return null;
@@ -327,27 +313,213 @@ public class RedBlackTree<K extends Comparable<?>,V> {
         p.setParent(pl);
     }
 
+    /**
+     * 找到指定节点的前驱节点
+     * 即找到小于该节点的最大值
+     * @param item
+     * @return
+     */
+    private RBTreeNode getPredecessor(RBTreeNode<K,V> item) {
+        if (item == null)
+            return null;
+
+        // 左子树不为空 则寻找左子树的最大右节点
+        if (item.getLeft() != null) {
+            RBTreeNode node = item.getLeft();
+            while (node.getRight() != null) {
+                node = node.getRight();
+            }
+            return node;
+        } else {
+            // 删除节点不会进入该部分逻辑
+            // 若没有左子树则往父节点的上一级寻找
+            RBTreeNode p = item.getParent();
+            RBTreeNode temp = item;
+            while (p != null && temp == p.getLeft()) {
+                temp = p;
+                p = p.getParent();
+            }
+            return p;
+        }
+    }
+
+    /**
+     * 获取后继节点
+     * 即获取大于该节点的最小节点
+     * @param item
+     * @return
+     */
+    private RBTreeNode getSuccessor(RBTreeNode<K,V> item) {
+        if (item == null)
+            return null;
+
+        // 右子树不为空 则寻找右子树的最大左节点
+        if (item.getRight() != null) {
+            RBTreeNode node = item.getRight();
+            while (node.getLeft() != null) {
+                node = node.getLeft();
+            }
+            return node;
+        } else {
+            // 删除节点不会进入该部分逻辑
+            // 若没有左子树则往父节点的上一级寻找
+            RBTreeNode p = item.getParent();
+            RBTreeNode temp = item;
+            while (p != null && temp == p.getRight()) {
+                temp = p;
+                p = p.getParent();
+            }
+            return p;
+        }
+    }
+
+    /**
+     * 删除节点, 即找到指定节点后做删除该节点, 然后找到其前驱节点或后继节点填补空缺
+     * 为了降低删除节点并使用其他节点填补操作的复杂性,实际删除操作也就转变为删除叶子
+     * 节点或只有一个子节点的节点, 然后将待删除节点的 key, value 改为删除节点的 key, value
+     *
+     * @param key
+     * @return
+     */
+    public V remove(K key){
+        RBTreeNode node = findByKey(key);
+        if(node==null){
+            return null;
+        }
+        V oldValue = (V)node.getValue();
+
+        deleteNode(node);
+
+        return oldValue;
+    }
+
+    /**
+     * 分三种情形:
+     * 1. 若该节点是叶子节点则直接删除
+     * 2. 若该节点仅有一个子节点则删除该节点后用其子节点补位
+     * 3. 若该节点存在两个子节点,则找到该节点的前驱节点或后继节点进行替换后再删除前驱或后继节点
+     *    该情形即转变为将前驱或后继节点覆盖待删除节点, 然后前驱或后继节点:
+     *    3.1 被删除节点(即前驱或后继节点)是叶子节点
+     *    3.2 被删除节点(即前驱或后继节点)仅有一个子节点
+     * @param node
+     */
+    private void deleteNode(RBTreeNode<K,V> node) {
+
+        // 3. node 节点有两个子节点
+        if (node.getLeft() != null && node.getRight() != null) {
+            // 后继节点
+            RBTreeNode successor = getSuccessor(node);
+            node.setValue((V) successor.getValue());
+            node.setKey((K) successor.getKey());
+            node = successor;
+        }
+
+        if (node.getParent() == null) {
+            root = null;
+        }
+
+        RBTreeNode replacement = node.getLeft() != null ? node.getLeft() : node.getRight();
+        // 1. 待替换的节点 node 是叶子节点, 直接删除
+        if (replacement == null) {
+            if(node.getColor() == RBTreeNode.BLACK){
+                // adjustAfterRemove
+            }
+            if (node.getParent()!=null && node.getParent().getLeft() == node) {
+                node.getParent().setLeft(null);
+            }
+            if (node.getParent()!=null && node.getParent().getRight() == node) {
+                node.getParent().setRight(null);
+            }
+            // 移除 node
+            node.setParent(null);
+        // 2. node 节点仅有一个子节点
+        } else {
+            replacement.setParent(node.getParent());
+            if (node.getParent() == null) {
+                root = replacement;
+            }
+            // 待替换的节点 node 存在一个子节点, 则将 node 移除后使用其子节点补位
+            else if (node.getParent().getLeft() == node) {
+                node.getParent().setLeft(replacement);
+            } else {
+                node.getParent().setRight(replacement);
+            }
+            // 移除 node
+            node.setLeft(null);
+            node.setRight(null);
+            node.setParent(null);
+
+            // 删除节点后调整树结构, 仅删除黑节点时才需调整, 保持黑色节点平衡
+            if(node.getColor() == RBTreeNode.BLACK){
+                // adjustAfterRemove
+            }
+        }
+    }
+
+    private void adjustAfterRemove(RBTreeNode<K,V> node){
+
+        // 若删除的节点是黑色节点则需要做调整
+        if(node!=root && getColor(node) == RBTreeNode.BLACK){
+
+            if(node.getParent().getLeft() == node){
+                RBTreeNode<K, V> brother = node.getParent().getRight();
+
+                // 判断 brother 是否是真正的兄弟节点, 若不是则调整为实际兄弟节点
+                if(brother.getColor() == RBTreeNode.RED){
+                    // 兄弟节点变为黑色
+                    setColor(brother, RBTreeNode.BLACK);
+                    // 父节点变为红色
+                    setColor(brother.getParent(), RBTreeNode.RED);
+                    // 沿着父节点左旋
+                    leftRotate(brother.getParent());
+                    // brother 调整为实际兄弟节点
+                    brother = node.getParent().getRight();
+                }
+
+                // 情况 3 , 找兄弟借, 兄弟没的借.
+                // 2-3-4 树仅有 3 节点及 4 节点才有的借, 2 节点无法借出. 故此处对应的红黑树即判断其左右子树是否都为空
+                if(getColor(brother.getLeft()) == RBTreeNode.BLACK&& getColor(brother.getRight())== RBTreeNode.BLACK){
+
+                }
+
+                // 情况 2 , 找兄弟借, 兄弟有的借
+                else{
+                    // 分两种情况, 即兄弟节点是 3 节点或 4 节点
+                    // 兄弟节点的右孩子为空, 即兄弟节点存在左子节点
+                    if(getColor(brother.getRight()) == RBTreeNode.BLACK){
+                        brother.setColor(RBTreeNode.RED);
+                        brother.getLeft().setColor(RBTreeNode.BLACK);
+                        rightRotate(brother);
+                        brother = node.getParent().getRight();
+                    }
+                }
+
+            }else{
+
+            }
 
 
+        }
 
+       // 替代节点是红色, 直接染黑, 替代删除的黑色节点, 保持黑色节点平衡
+       setColor(node, RBTreeNode.BLACK);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    private RBTreeNode findByKey(K key) {
+        if (key == null) {
+            return null;
+        }
+        RBTreeNode<K, V> node = root;
+        while (node != null) {
+            int cmp = key.compareTo((K) node.getKey());
+            if (cmp < 0) {
+                node = node.getLeft();
+            }
+            if (cmp > 0) {
+                node = node.getRight();
+            }
+            return node;
+        }
+        return null;
+    }
 }
