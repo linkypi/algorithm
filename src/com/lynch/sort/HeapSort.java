@@ -1,7 +1,5 @@
 package com.lynch.sort;
 
-import sun.jvm.hotspot.utilities.IntegerEnum;
-
 import javax.swing.text.AsyncBoxView;
 import javax.swing.text.Highlighter;
 import java.util.Random;

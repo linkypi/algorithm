@@ -1,4 +1,5 @@
-package com.lynch.sort;/*
+package com.lynch.sort;
+/*
  * @Author: your name
  * @Date: 2021-06-12 10:10:43
  * @LastEditTime: 2021-06-12 10:22:49
