@@ -1,4 +1,4 @@
-package com.lynch;
+package com.lynch.tools;
 
 import com.lynch.tools.Generator;
 import com.lynch.tools.Utils;

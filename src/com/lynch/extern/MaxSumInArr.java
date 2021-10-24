@@ -1,4 +1,4 @@
-package com.lynch;
+package com.lynch.extern;
 
 import java.awt.geom.GeneralPath;
 
@@ -10,7 +10,8 @@ public class MaxSumInArr {
     }
 
     /**
-     * 获取连续子数组和的最大值
+     * 输入一个整型数组，数组里有正数也有负数。数组中一个或连续的多个整数
+     * 组成一个子数组。求所有子数组的和的最大值。要求时间复杂度为 O（n）。
      * @param arr
      * @return
      */
