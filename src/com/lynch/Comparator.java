@@ -1,6 +1,5 @@
 package com.lynch;
 
-import com.lynch.tools.Generator;
 import com.lynch.tools.Utils;
 
 import java.util.function.Consumer;
@@ -20,7 +19,7 @@ public class Comparator {
 
         this.testTime = testTime;
 
-        arr1 = Generator.generateRandomArr(maxSize, maxValue);
+        arr1 = Utils.generateRandomArr(maxSize, maxValue);
         arr2 = Utils.copyArr(arr1);
     }
 

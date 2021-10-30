@@ -1,13 +1,11 @@
 package com.lynch;
 
-import com.lynch.tools.Generator;
 import com.lynch.tools.Utils;
 
 public class SortDemo {
     public static void main(String[] args) {
         int[] arr = new int[]{3, 4, 6, 5, 1, 7, 2};
         insertSort(arr);
-
     }
 
     private static void insertSort(int[] arr) {

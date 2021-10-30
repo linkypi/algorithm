@@ -27,6 +27,7 @@ public class Utils {
 
     /**
      * 对比两个数组中的元素是否一致
+     *
      * @param arr1
      * @param arr2
      * @return
@@ -40,15 +41,35 @@ public class Utils {
             System.out.println("arr2 is null or it's length is 0.");
             return false;
         }
-        if(arr1.length != arr2.length){
+        if (arr1.length != arr2.length) {
             System.out.println("arr1 length is not equal arr2 length.");
             return false;
         }
         for (int i = 0; i < arr1.length; i++) {
-            if(arr1[i] !=arr2[i]){
+            if (arr1[i] != arr2[i]) {
                 return false;
             }
         }
         return true;
+    }
+
+    public static int[] generateRandomArr(int maxSize, int maxvalue) {
+        int[] arr = new int[(int) ((maxSize + 1) * Math.random())];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = (int) ((maxvalue + 1) * Math.random() - (int) (maxvalue * Math.random()));
+        }
+        return arr;
+    }
+
+    public static int getRandom(int maxvalue) {
+        return (int) (maxvalue * Math.random());
+    }
+
+    public static int getRandom(int minValue, int maxvalue) {
+        int ret = 0;
+        while (ret <= minValue) {
+            ret = (int) (maxvalue * Math.random());
+        }
+        return ret;
     }
 }
