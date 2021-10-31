@@ -1,13 +1,21 @@
 package com.lynch.tools;
 
 public class Utils {
+    public static void printArr(int[] arr) {
+        printArr("", arr);
+    }
     public static void printArr(String msg, int[] arr) {
         if (arr == null || arr.length == 0) {
             System.out.println(msg + " arr: null");
             return;
         }
 
-        System.out.print(msg + " arr: ");
+        if (msg != null && msg != "") {
+            System.out.print(msg + " arr: ");
+        } else {
+            System.out.print("arr: ");
+        }
+
         for (int item : arr) {
             System.out.print(item + "  ");
         }
@@ -61,6 +69,24 @@ public class Utils {
         return arr;
     }
 
+    /**
+     * 生成正数随机数组
+     * @param maxSize
+     * @param maxvalue
+     * @return
+     */
+    public static int[] generatePositiveRandomArrNoZero(int maxSize, int maxvalue) {
+        int[] arr = new int[(int) ((maxSize + 1) * Math.random())];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = 0;
+            while (arr[i] == 0) {
+                arr[i] = (int) ((maxvalue + 1) * Math.random() - (int) (maxvalue * Math.random()));
+            }
+            arr[i] = arr[i] < 0 ? -arr[i] : arr[i];
+        }
+        return arr;
+    }
+
     public static int getRandom(int maxvalue) {
         return (int) (maxvalue * Math.random());
     }
@@ -68,6 +94,20 @@ public class Utils {
     public static int getRandom(int minValue, int maxvalue) {
         int ret = 0;
         while (ret <= minValue) {
+            ret = (int) (maxvalue * Math.random());
+        }
+        return ret;
+    }
+
+    /**
+     * 获取正数随机数, 不包含 0
+     * @param minValue
+     * @param maxvalue
+     * @return
+     */
+    public static int getPositiveRandomNoZero(int minValue, int maxvalue) {
+        int ret = 0;
+        while (ret <= minValue || ret == 0) {
             ret = (int) (maxvalue * Math.random());
         }
         return ret;
