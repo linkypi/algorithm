@@ -1,4 +1,4 @@
-package com.lynch;
+package com.lynch.extern;
 
 public class FindNumberInOrderedArr {
     public static void main(String[] args) {
@@ -8,7 +8,7 @@ public class FindNumberInOrderedArr {
     }
 
     /**
-     * 在一个有序数组中查找一个数, 并返回其位置
+     * 案例 1 ：在一个有序数组中查找一个数, 并返回其位置
      * 使用二分查找即可
      * @return
      */
@@ -37,7 +37,7 @@ public class FindNumberInOrderedArr {
         return mid;
     }
 
-    // 在一个无序数组中 任何两个数一定不相等, 求局部最小
+    // 案例2： 在一个无序数组中 任何两个数一定不相等, 求局部最小
     // 1. 对于 0 位置来说,如果 0 位置的数小于 1 位置的数则 0 位置即为局部最小位置
     // 2. 对于最后位置 N-1, 若 N-2 位置的数大于 N-1 位置的数 则 N-1 即为局部最小位置
     // 3. 对于中间位置 i, 若 i-1 > i < i+1 则 i 位置为局部最小位置

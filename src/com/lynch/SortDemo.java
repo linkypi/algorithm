@@ -5,7 +5,11 @@ import com.lynch.tools.Utils;
 public class SortDemo {
     public static void main(String[] args) {
         int[] arr = new int[]{3, 4, 6, 5, 1, 7, 2};
+        int[] arr2 = Utils.copyArr(arr);
         insertSort(arr);
+
+        System.out.println();
+        mergeSort(arr2);
     }
 
     private static void insertSort(int[] arr) {
@@ -26,5 +30,47 @@ public class SortDemo {
             }
         }
         Utils.printArr("insert sort after", arr);
+    }
+
+    private static void mergeSort(int[] arr) {
+        Utils.printArr("merge sort before", arr);
+        process(arr, 0, arr.length - 1);
+        Utils.printArr("merge sort after", arr);
+    }
+
+    private static void process(int[] arr, int start, int end) {
+        if (start == end) {
+            return;
+        }
+        int mid = start + ((end - start) >> 1);
+
+        process(arr, start, mid);
+        process(arr, mid + 1, end);
+        merge(arr, start, mid, end);
+    }
+
+    private static void merge(int[] arr, int start, int mid, int end) {
+
+        int[] temp = new int[end - start + 1];
+        int tempIndex = 0;
+        int leftIndex = start;
+        int rightIndex = mid + 1;
+
+        while (leftIndex <= mid && rightIndex <= end) {
+            temp[tempIndex++] = arr[leftIndex] > arr[rightIndex] ? arr[rightIndex++] : arr[leftIndex++];
+        }
+
+        while (rightIndex <= end) {
+            temp[tempIndex++] = arr[rightIndex++];
+        }
+        while (leftIndex <= mid) {
+            temp[tempIndex++] = arr[leftIndex++];
+        }
+
+        for (int i = 0; i < temp.length; i++) {
+            arr[start + i] = temp[i];
+        }
+
+        Utils.printArr("merge, start: " + start + ", mid: " + mid + ", end: " + end, arr);
     }
 }
