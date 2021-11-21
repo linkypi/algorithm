@@ -1,7 +1,5 @@
 package com.lynch;
 
-import java.util.Date;
-
 /**
  * Description algorithm
  * Created by troub on 2021/5/27 16:44
@@ -99,23 +97,25 @@ public class Fibonacci {
     /**
      * 两个矩阵相乘 arr1 * arr2
      * 只有前一个矩阵的列数 等于 后一个矩阵的行数才可以相乘
-     * @param arr1
-     * @param arr2
+     * @param matrix1
+     * @param matrix2
      * @return
      */
-    private static long[][] matrixMultiple(long[][] arr1, long[][] arr2) {
+    private static long[][] matrixMultiple(long[][] matrix1, long[][] matrix2) {
         // 只有前一个矩阵的列数 等于 后一个矩阵的行数才可以相乘
-        if (arr1[0].length != arr2.length) {
+        if (matrix1[0].length != matrix2.length) {
             throw new IllegalStateException("matrix multiple not allow, columns of arr1 is not equal rows of arr2.");
         }
 
-        int columns = arr2[0].length;
-        long[][] result = new long[arr1.length][columns];
+        int rows = matrix1.length;
+        int columns = matrix2[0].length;
+        long[][] result = new long[rows][columns];
 
-        for (int i = 0; i < arr1.length; i++) {
+        // matrix1的行 * matrix2 的列
+        for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 for (int k = 0; k < columns; k++) {
-                    result[i][j] += arr1[i][k] * arr2[k][j];
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
                 }
             }
         }
@@ -139,4 +139,5 @@ public class Fibonacci {
     }
 
     private static final int SIZE = 2;
+
 }

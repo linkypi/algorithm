@@ -10,7 +10,9 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.fusesource.jansi/jansi -->
         <dependency>
@@ -24,6 +26,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.20</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.sbt</groupId>
+            <artifactId>incremental-compiler</artifactId>
+            <version>0.13.5</version>
         </dependency>
 
     </dependencies>
