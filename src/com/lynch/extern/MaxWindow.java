@@ -6,7 +6,8 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 /**
- * 给定一个数组, 按顺序求指定窗口大小的最大值数组
+ * 给定一个数组, 按顺序求出指定窗口大小内子数组元素的最大值, 并将他们放到一个数组中返回
+ * 如: [3,5,2,6,4,7,1,8], 窗口大小为 3 则结果为: [5, 6, 6, 7, 7, 8]
  */
 public class MaxWindow {
     public static void main(String[] args) {
@@ -17,7 +18,7 @@ public class MaxWindow {
 
     private static int[] getMaxWindow(int[] arr, int windowSize) {
         int[] maxArr = new int[arr.length - windowSize + 1];
-        // 使用双端队列记录从左到右按顺序以此递减的序列
+        // 使用双端队列记录从左到右按顺序依次递减的序列
         Deque<Integer> queue = new LinkedList<>();
         int right = 0, left = 0;
         while (right < arr.length) {
