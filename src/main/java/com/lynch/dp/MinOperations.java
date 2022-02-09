@@ -4,7 +4,7 @@ package com.lynch.dp;
  * 给定两个字符串str1, str2, 求 str1 转为 str2 最少需要多少步操作
  * 可供选择的操作有三种：插入，删除，替换
  */
-public class MinDistance {
+public class MinOperations {
     public static void main(String[] args) {
 //        String str1 = "rad";
 //        String str2 = "apple";
