@@ -1,9 +1,5 @@
 package com.lynch.sort;
 
-import javax.swing.text.AsyncBoxView;
-import javax.swing.text.Highlighter;
-import java.util.Random;
-
 public class HeapSort extends AbstractSort {
     public HeapSort() {
     }

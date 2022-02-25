@@ -13,16 +13,18 @@ public class TopK {
     public static void main(String[] args) {
 
     }
-    public static class Node{
+
+    public static class Node {
         private final String str;
         private int times;
-        public Node(String str){
+
+        public Node(String str) {
             this.str = str;
             this.times = 1;
         }
 
         @Override
-        public String toString(){
+        public String toString() {
             return this.str;
         }
     }
@@ -30,8 +32,8 @@ public class TopK {
     private static int heapSize = 0;
     private static final int K = 3;
     private static final Node[] arr = new Node[K];
-    private static final HashMap<String,Node> wordFrequentMapper = new HashMap<>();
-    private static final HashMap<String,Integer> positionMapper = new HashMap<>();
+    private static final HashMap<String, Node> wordFrequentMapper = new HashMap<>();
+    private static final HashMap<String, Integer> positionMapper = new HashMap<>();
 
     public static void add(String str) {
 
@@ -57,17 +59,17 @@ public class TopK {
         int index = positionMapper.get(node.str);
         if (index > -1) {
             shiftDown(index, node);
-        }else{
+        } else {
             // 该词不在堆上,但是词频已经大于堆顶元素的词频则替换
             Node first = arr[0];
-            if(node.times > first.times){
+            if (node.times > first.times) {
                 arr[0] = node;
                 shiftDown(0, node);
             }
         }
     }
 
-    private static void shiftDown(int index, Node node){
+    private static void shiftDown(int index, Node node) {
 
         int count = heapSize >> 2;
         while (index <= count) {
