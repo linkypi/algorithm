@@ -1,7 +1,5 @@
 package com.lynch.backtrack;
 
-import java.util.List;
-
 /**
  * N 皇后问题，在一个 NxN 的棋盘中摆放N个皇后，求一共有多少种摆放方式
  * 要求：与皇后的同一行同一列的不能摆，与皇后的左右上角，左右下角所形成的对角线不能摆
@@ -12,22 +10,26 @@ public class NQueen {
     public static void main(String[] args) {
         final int N = 8;
 
-        // 最优求解
-        int count = bestSolution(N);
-        System.out.println(N + " queen result: " + count);
+        // 最优求解 使用二进制位存储放皇后的位置
+//        int count = bestSolution(N);
+//        System.out.println(N + " queen result: " + count);
+//
+//
+//        count = solve(N);
+//        System.out.println(N + " queen result: " + count);
 
 
-        count = solve(N);
-        System.out.println(N + " queen result: " + count);
 //        char[][] board = new char[N][N];
 //        for (int r = 0; r < N; r++) {
 //            for (int c = 0; c < N; c++) {
 //                board[r][c] = '.';
 //            }
 //        }
-//        List<String> track = new ArrayList<>();
-//        final int count = getByBackTrack(board, track, 0, 0);
-//        System.out.println("result: " + count);
+//        backtrack(board, 0);
+
+        int[] records = new int[N];
+        test(records,0);
+        System.out.println("result: " + COUNT);
     }
 
     private static int solve(int n) {
@@ -124,50 +126,44 @@ public class NQueen {
         return count;
     }
 
+    static int COUNT = 0;
+
     /**
-     * 使用回溯算法求解
-     *
+     * 对棋盘的每一行进行尝试
      * @param board
-     * @param track
-     * @param startRow
-     * @param startCol
+     * @param row
      * @return
      */
-    private static int getByBackTrack(char[][] board, List<String> track, int startRow, int startCol) {
+    static boolean backtrack(char[][] board, int row) {
         int n = board.length;
-        // 若已经填满 N 个皇后则表示
-        if (startRow == n) {
-            track.clear();
-            return 1;
+
+        // 所有行列都已尝试过，没有遇到不符合的情况说明求得一解
+        if (row == n) {
+            COUNT++;
+            return true;
         }
-        int count = 0;
-        for (int r = startRow; r < n; r++) {
-            for (int c = startCol; c < n; c++) {
-                if (!isValid(board, n, r, c)) {
-                    continue;
-                }
-                board[r][c] = 'Q';
-                // 记录摆放位置
-                track.add(r + "," + c);
-                // 由于下一个摆放的皇后不能与当前的皇后在同一行同一列，且不能同一对角线
-                // 所以需要从下一行的对角线位置的下一个位置开始摆放
-                final int result = getByBackTrack(board, track, r + 1, c + 2);
-                if (result != 0) {
-                    count += result;
-                }
-                board[r][c] = '.';
+
+        // 对当前行所有列进行尝试
+        for (int col = 0; col < n; col++) {
+            if (!isValid(board, row, col)) {
+                continue;
             }
+            board[row][col] = 'Q';
+            backtrack(board, row + 1);
+            board[row][col] = '.';
         }
-        return count;
+        return false;
     }
 
-    private static boolean isValid(char[][] board, int n, int row, int col) {
+    private static boolean isValid(char[][] board, int row, int col) {
+        int n = board.length;
+        // 无需检测是否在同一行，因为放置皇后总会以新行开始
         // 检测同一行是否已经摆放皇后
-        for (int c = 0; c < col; c++) {
-            if (board[row][c] == 'Q') {
-                return false;
-            }
-        }
+//        for (int c = 0; c < col; c++) {
+//            if (board[row][c] == 'Q') {
+//                return false;
+//            }
+//        }
         // 检测同一列是否已经摆放皇后
         for (int r = 0; r < row; r++) {
             if (board[r][col] == 'Q') {
@@ -175,18 +171,52 @@ public class NQueen {
             }
         }
 
-        // 检测左上角及右上角是否已摆放皇后
-        // 由于是从上往下穷举，所以只需要检测左右上角位置，左右下角无需检测
-        for (int r = 0; r < n; r++) {
-            for (int c = 0; c < n; c++) {
-                // 检测左上角
-                if (r - 1 > -1 && c - 1 > -1 && board[r - 1][c - 1] == 'Q') {
-                    return false;
-                }
-                // 检测右上角
-                if (r - 1 > -1 && c + 1 < n && board[r - 1][c + 1] == 'Q') {
-                    return false;
-                }
+        // 检测左上角
+        for (int r = row - 1, c = col - 1; r > -1 && c > -1; r--, c--) {
+            if (board[r][c] == 'Q') {
+                return false;
+            }
+        }
+
+        // 检测右上角
+        for (int r = row - 1, c = col + 1; r > -1 && c < n; r--, c++) {
+            if (board[r][c] == 'Q') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    static void test(int[] record, int row) {
+        int n = record.length;
+        if (n == row) {
+            COUNT++;
+            return;
+        }
+
+        for (int col = 0; col < n; col++) {
+            if (!testValid(record, row, col)) {
+                continue;
+            }
+            record[row] = col;
+            test(record, row + 1);
+        }
+    }
+
+    static boolean testValid(int[] record, int row, int col) {
+        int n = record.length;
+        for (int r = 0; r < row; r++) {
+            if (record[r] == col) {
+                return false;
+            }
+        }
+
+        //(a,b) 与 (c,d) 处在对角线的计算方式 |(a-c)|==|(b-d)|
+        // 如 (2,3) 其对角线即行和列各自加减一行，如 (3,4), (4,5), (3,2)
+        for (int r = 0; r < row; r++) {
+            if (Math.abs(row - r) == Math.abs(col - record[r])) {
+                return false;
             }
         }
         return true;
