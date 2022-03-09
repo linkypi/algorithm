@@ -21,6 +21,26 @@ public class TestSort {
         int[] arr3 = new int[]{3, 1, 7, 5, 4, 8};
         heapSort(arr3);
         Utils.printArr("heap sort: ", arr3);
+
+        int[] arr4 = new int[]{3, 1, 7, 5, 4, 8};
+        insertionSort(arr4);
+        Utils.printArr("insertion sort: ", arr4);
+    }
+
+    private static void insertionSort(int[] arr) {
+        if (arr == null || arr.length < 2) {
+            return;
+        }
+
+        for (int i = 0; i < arr.length-1; i++) {
+            for (int j = i + 1; j > 0; j--) {
+                if (arr[j] < arr[j-1]) {
+                    int x = arr[j];
+                    arr[j] = arr[j-1];
+                    arr[j-1] = x;
+                }
+            }
+        }
     }
 
     private static void qsort(int[] arr, int start, int end) {
