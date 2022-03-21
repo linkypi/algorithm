@@ -73,4 +73,63 @@ public class MergeSort extends AbstractSort {
         }
         return arr;
     }
+
+    /**
+     * 使用非递归的方式来实现归并排序
+     * @param arr
+     */
+    private static void  mergeSort(int[] arr) {
+        int mergeSize = 1;
+        int n = arr.length;
+        while (mergeSize < n) {
+            // left 表示左边数组的起始位置， rightEnd表示右边数组末尾位置的下一个位置
+            int left = 0, rightEnd = 0;
+            while (rightEnd < n) {
+                rightEnd = Math.min(n, rightEnd + mergeSize * 2);
+                // 后续剩余的数组刚好在左边待合并数组范围内，说明右边已经超出范围可退出进入下一个mergeSize的合并
+                if (n - left <= mergeSize) {
+                    break;
+                }
+                merge2(arr, left, left + mergeSize, rightEnd);
+                left += mergeSize * 2;
+            }
+            // 不断扩大合并范围
+            mergeSize <<= 1;
+        }
+    }
+
+    /**
+     * 合并左右两部分数组
+     * @param arr
+     * @param start 左边数组起始位置
+     * @param mid   右边起始位置，也即左边部分末尾的下一个位置
+     * @param end   右边部分末尾位置
+     */
+    private static void merge2(int[] arr, int start, int mid ,int end) {
+        int[] temp = new int[end - start];
+        int index = 0, leftStart = start;
+        int rightStart = mid;
+        while (leftStart < mid && rightStart < end) {
+            if (arr[leftStart] > arr[rightStart]) {
+                temp[index++] = arr[rightStart++];
+            } else {
+                temp[index++] = arr[leftStart++];
+            }
+        }
+        if (leftStart < mid) {
+            for (int i = leftStart; i < mid; i++) {
+                temp[index++] = arr[i];
+            }
+        }
+        if (rightStart < end) {
+            for (int i = rightStart; i < end; i++) {
+                temp[index++] = arr[i];
+            }
+        }
+
+        for (int i = start; i < end; i++) {
+            arr[i] = temp[i - start];
+        }
+    }
+
 }
