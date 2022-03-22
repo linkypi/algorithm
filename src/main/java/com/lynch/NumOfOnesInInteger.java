@@ -3,7 +3,8 @@ package com.lynch;
 public class NumOfOnesInInteger {
 
     public static void main(String[] args) {
-        int numOfOnes = numOfOnes(1410065408);
+//        int numOfOnes = numOfOnes(1410065408);
+        int numOfOnes = numOfOnes(12);
         System.out.println("numOfOnes: "+ numOfOnes);
     }
 
