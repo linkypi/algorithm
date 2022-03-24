@@ -1,5 +1,7 @@
 package com.lynch.tools;
 
+import java.util.List;
+
 public class Utils {
     public static void printArr(int[] arr) {
         printArr("", arr);
@@ -16,10 +18,32 @@ public class Utils {
             System.out.print("arr: ");
         }
 
+        StringBuilder builder = new StringBuilder();
         for (int item : arr) {
-            System.out.print(item + "  ");
+            builder.append(item);
+            builder.append("  ");
         }
-        System.out.println();
+        System.out.println(builder);
+    }
+
+    public static void printArr(String msg, List<?> arr) {
+        if (arr == null || arr.size() == 0) {
+            System.out.println(msg + " arr: null");
+            return;
+        }
+
+        if (msg != null && msg != "") {
+            System.out.print(msg + " arr: ");
+        } else {
+            System.out.print("arr: ");
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (Object item : arr) {
+            builder.append(item);
+            builder.append("  ");
+        }
+        System.out.println(builder);
     }
 
     public static int[] copyArr(int[] arr) {
