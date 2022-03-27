@@ -1,9 +1,6 @@
 package com.lynch.string;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 求给定字符串的最长重复子串

@@ -41,6 +41,23 @@ public class CoinValue {
         System.out.println("All result: " + (success ? "OK" : "Failed"));
     }
 
+    static int find(int[] arr, int index, int rest) {
+        if (rest == 0) {
+            return 1;
+        }
+        if (rest < 0) {
+            return 0;
+        }
+        if (index > arr.length - 1) {
+            return 0;
+        }
+
+        int use = find(arr, index + 1, rest - arr[index]) + 1;
+        int unuse = find(arr, index + 1, rest);
+        return Math.min(use, unuse);
+    }
+
+
     /**
      * 使用递归方式求解
      *

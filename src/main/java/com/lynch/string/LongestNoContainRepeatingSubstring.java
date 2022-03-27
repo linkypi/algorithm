@@ -21,16 +21,16 @@ public class LongestNoContainRepeatingSubstring {
     }
 
     public static int lengthOfLongestSubstring2(String s) {
-        HashMap<Character,Integer> map = new HashMap<>();
+        HashMap<Character, Integer> map = new HashMap<>();
         int start = -1;
         int max = 0;
-        for(int i=0;i<s.length();i++){
+        for (int i = 0; i < s.length(); i++) {
             char x = s.charAt(i);
-            if(map.containsKey(x)){
-                start = Math.max(start,map.get(x));
+            if (map.containsKey(x)) {
+                start = Math.max(start, map.get(x));
             }
-            map.put(x,i);
-            max = Math.max(max,i-start);
+            map.put(x, i);
+            max = Math.max(max, i - start);
         }
         return max;
     }

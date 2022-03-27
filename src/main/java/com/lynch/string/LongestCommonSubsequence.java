@@ -1,4 +1,4 @@
-package com.lynch.dp;
+package com.lynch.string;
 
 /**
  * 求两个字符串的最长公共子序列长度， 注意序列不一定是连续的
