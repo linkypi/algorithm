@@ -1,4 +1,4 @@
-package com.lynch.extern;
+package com.lynch.maxsum;
 
 import java.awt.geom.GeneralPath;
 

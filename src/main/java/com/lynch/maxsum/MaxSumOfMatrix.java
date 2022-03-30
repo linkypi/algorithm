@@ -1,4 +1,4 @@
-package com.lynch.extern;
+package com.lynch.maxsum;
 
 /**
  * 给定一个整数矩阵, 请矩阵的最大累加和
@@ -15,7 +15,7 @@ public class MaxSumOfMatrix {
         int row = arr.length, column = arr[0].length;
         int max = 0;
         for (int index = 0; index < row; index++) {
-            // 将结果逐层累计到 sumRow, 然后请该数组中子数组的最大累加和
+            // 将结果逐层累计到 sumRow, 然后取该数组中子数组的最大累加和
             int[] sumRow = new int[column];
             for (int k = 0; k < index + 1; k++) {
                 for (int c = 0; c < column; c++) {

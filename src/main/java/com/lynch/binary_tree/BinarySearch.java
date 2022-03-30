@@ -1,4 +1,4 @@
-package com.lynch;
+package com.lynch.binary_tree;
 
 /**
  * Description algorithm
