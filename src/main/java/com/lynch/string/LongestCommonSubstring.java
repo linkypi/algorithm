@@ -1,5 +1,7 @@
 package com.lynch.string;
 
+import java.util.LinkedHashMap;
+
 /**
  * 给定两个字符串，求他们的最长公共子串
  * @author: linxueqi
@@ -16,6 +18,17 @@ public class LongestCommonSubstring {
 
     /**
      * 将动态规划精简为从上往下的斜对角线进行遍历
+     * 计算没条斜线都相同时的长度，最后取最长一条即可
+     *           0   1   2   3   4   5
+     *     +---+---+---+---+---+---+---+
+     *     |   | 0 | a | b | c | d | e |
+     *     +---+---+---+---+---+---+---+
+     *   0 | 0 |   |   |   |   |   |   |
+     *   1 | b |   |   | 1 |   |   |   |
+     *   2 | c |   |   |   | 1 |   |   |
+     *   3 | d |   |   |   |   | 1 |   |
+     *   4 | e |   |   |   |   |   | 1 |
+     *     +---+---+---+---+---+---+---+
      * @param str1
      * @param str2
      * @return
