@@ -13,9 +13,9 @@ public class TestSort {
         mergeSort(arrx);
         Utils.printArr("merge sort: ", arrx);
 
-//        int[] arr = new int[]{5, 2, 7, 1, 6, 8};
-//        qsort(arr, 0, arr.length - 1);
-//        Utils.printArr("quick sort: ", arr);
+        int[] arr = new int[]{5, 2, 7, 1, 6, 8};
+        qsort(arr, 0, arr.length - 1);
+        Utils.printArr("quick sort: ", arr);
 //
 //        int[] arr2 = new int[]{5, 2, 7, 1, 6, 8};
 //        mergeSort(arr2, 0, arr2.length - 1);
