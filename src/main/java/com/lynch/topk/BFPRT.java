@@ -12,19 +12,19 @@ public class BFPRT {
 
     }
 
-    private static int select(int[] arr, int begin, int end, int i) {
+    private static int bfprt(int[] arr, int begin, int end, int k) {
         if (begin == end) {
             return arr[begin];
         }
 
         int pivot = medianOfMedians(arr, begin, end);
         int[] pivotRang = partition(arr, begin, end, pivot);
-        if (i >= pivotRang[0] && i <= pivotRang[1]) {
-            return arr[i];
-        } else if (i < pivotRang[0]) {
-            return select(arr, begin, pivotRang[0] - 1, i);
+        if (k >= pivotRang[0] && k <= pivotRang[1]) {
+            return arr[k];
+        } else if (k < pivotRang[0]) {
+            return bfprt(arr, begin, pivotRang[0] - 1, k);
         } else {
-            return select(arr, pivotRang[1] + 1, end, i);
+            return bfprt(arr, pivotRang[1] + 1, end, k);
         }
     }
 
@@ -38,7 +38,7 @@ public class BFPRT {
             int endIndex = begin + 4;
             temp[i] = getMedian(arr, startIndex, Math.min(endIndex, end));
         }
-        return select(temp, 0, temp.length - 1, temp.length / 2);
+        return bfprt(temp, 0, temp.length - 1, temp.length / 2);
     }
 
     private static int getMedian(int[] arr, int start, int end) {
