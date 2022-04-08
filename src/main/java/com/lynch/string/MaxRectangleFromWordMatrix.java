@@ -3,11 +3,17 @@ package com.lynch.string;
 import java.util.*;
 
 /**
+ * 给定一份单词的清单，设计一个算法，创建由字母组成的面积最大的矩形，
+ * 其中每一行组成一个单词 (自左向右)，每一列也组成一个单词 (自上而下)。
+ * 不要求这些单词在清单里连续出现，但要求所有行等长，所有列等高。
+ *
+ * 如果有多个面积最大的矩形，输出任意一个均可。一个单词可以重复使用。
+ *
  * @Author: linxueqi
  * @Description:
  * @Date: create in 2022/4/6 15:46
  */
-public class Matrix {
+public class MaxRectangleFromWordMatrix {
     public static void main(String[] args) {
 //        "this", "real", "hard", "trh", "hea", "iar", "sld"
         List<String> list = new ArrayList<>();
@@ -20,36 +26,17 @@ public class Matrix {
         list.add("iar");
         list.add("sld");
         String[] arr = {
-           "this", "real", "hard", "trh", "hea", "iar", "sld"
+                "this", "real", "hard", "trh", "hea", "iar", "sld"
         };
         String[] result = maxRectangle(arr);
-    }
-
-    public static List<String> find(List<String> list) {
-
-        HashMap<String, String> wordsMap = new HashMap<>();
-        for (String item : list) {
-            wordsMap.put(item, item);
-        }
-        HashMap<Integer, List<String>> lenMap = new HashMap<>();
-        for (String item : list) {
-            if (lenMap.containsKey(item.length())) {
-                lenMap.get(item.length()).add(item);
-            } else {
-                List<String> arrayList = new ArrayList<>();
-                arrayList.add(item);
-                lenMap.put(item.length(), arrayList);
-            }
-        }
-
-        return null;
+        System.out.println("xxx");
     }
 
     static Trie trie = new Trie();
-   static int maxArea = 0;
-   static List<String> ans = null;
+    static int maxArea = 0;
+    static List<String> ans = null;
     //保存以长度为key，以单词集合为value的map，按照长度从大到小排序
-   static TreeMap<Integer, Set<String>> map = new TreeMap<>((o1, o2) -> o2 - o1);
+    static TreeMap<Integer, Set<String>> map = new TreeMap<>((o1, o2) -> o2 - o1);
 
     public static String[] maxRectangle(String[] words) {
         //按照长度添加进map，同时添加到字典树中
@@ -86,12 +73,17 @@ public class Matrix {
             //如果每个新的Node都是单词结尾，allValid保持为true，是合格的矩形
             boolean allValid = true;
             Node[] next = new Node[nodes.length];
+            String item = list.get(p);
             for (int i = 0; i < len; i++) {
-                if (nodes[i].children[list.get(p).charAt(i) - 'a'] == null) continue search;
-                if (!nodes[i].children[list.get(p).charAt(i) - 'a'].valid) allValid = false;
-                next[i] = nodes[i].children[list.get(p).charAt(i) - 'a'];
+                Node child = nodes[i].children[item.charAt(i) - 'a'];
+                if (child == null)
+                    continue search;
+                if (!child.valid)
+                    allValid = false;
+
+                next[i] = child;
             }
-            curList.add(list.get(p));
+            curList.add(item);
             if (allValid && maxArea < len * curList.size()) {
                 maxArea = len * curList.size();
                 ans = new ArrayList<>(curList);

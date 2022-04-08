@@ -1,4 +1,4 @@
-package com.lynch.extern;
+package com.lynch.xor;
 
 /**
  * 使用异或解决的相关算法题

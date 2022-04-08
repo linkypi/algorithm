@@ -1,4 +1,4 @@
-package com.lynch;
+package com.lynch.linkedlist;
 
 public class ReverseLink {
 

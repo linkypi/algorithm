@@ -1,4 +1,4 @@
-package com.lynch.normal;
+package com.lynch.xor;
 
 import com.lynch.tools.Utils;
 

@@ -1,4 +1,4 @@
-package com.lynch.extern;
+package com.lynch.linkedlist;
 
 /**
  * 反转链表

@@ -1,4 +1,4 @@
-package com.lynch.extern;
+package com.lynch.linkedlist;
 
 import org.w3c.dom.Node;
 
