@@ -14,11 +14,11 @@ import java.util.PriorityQueue;
  */
 public class NumberOfOverlapLineSegment {
     public static void main(String[] args) {
-         int[][] arr = new int[][]{
-                 {1, 10},{5,8},{4,9},{2,4},{3,6}
-         };
+        int[][] arr = new int[][]{
+                {2, 4}, {3, 6}, {1, 10}, {5, 8}, {4, 9}
+        };
         int count = countOfOverlapSegment(arr);
-        System.out.println("count: "+ count);
+        System.out.println("count: " + count);
     }
 
     private static void qsort2d(int[][] arr, int start, int end) {
@@ -54,8 +54,8 @@ public class NumberOfOverlapLineSegment {
 
         int max = 0;
         PriorityQueue<Integer> queue = new PriorityQueue<>(segments.length);
-        // 2.准备一个小根堆，每次进堆前判断堆顶元素是否存在小于等于
-        //   当前start的值，存在则移除然后将 end 加入到堆中。
+        // 2.准备一个小根堆，每次进堆前判断堆顶元素是否小于等于
+        //   当前start的值，是则移除堆顶直到满足条件后将 end 加入到堆中。
         //   每次遍历一次完成后堆元素的数量即为重叠数，对每次遍历取最大值即可
         //   每次进堆前判断堆顶元素是否存在小于等于当前start的值 目的就是
         //   为了剔除不重叠的线段
@@ -67,6 +67,8 @@ public class NumberOfOverlapLineSegment {
             }
 
             int start = segment[0];
+            // 因为数组已经根据start排序，所以若新的线段start 比前一个线段的 end 大
+            // 则说明他们不会重合，可以重新开始
             while (!queue.isEmpty() && queue.peek() <= start) {
                 queue.poll();
             }
