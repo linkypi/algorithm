@@ -175,8 +175,11 @@ public class FindNetworkDelay {
         }
 
         int max = 0;
-        for (int di : dis) {
-            max = Math.max(max, di);
+        for (int i = 0; i <= n; i++) {
+            if (i == start || dis[i] == Integer.MAX_VALUE) {
+                continue;
+            }
+            max = Math.max(max, dis[i]);
         }
         return max;
     }
