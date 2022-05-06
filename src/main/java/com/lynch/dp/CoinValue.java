@@ -2,12 +2,91 @@ package com.lynch.dp;
 
 import com.lynch.tools.Utils;
 
+import java.util.Arrays;
+
 /**
  * 题意: 在一个整型数组中给定每枚硬币的价值, 如 [2,3,7,5,3,.....],
- * 数值可重复, 求总价值为 N 时最少需要多少枚硬币.
+ * 数组中的数值可重复, 求总价值为 N 时最少需要多少枚硬币.
  */
 public class CoinValue {
+
     public static void main(String[] args) {
+        int[] arr = {2, 3, 7, 5, 3, 6, 4};
+        int value = 20;
+        int ways = findWays(arr, 0, value);
+
+        int[][] mem = new int[arr.length][value+1];
+        for (int i = 0; i < arr.length; i++) {
+            Arrays.fill(mem[i], -1);
+        }
+        int ways2 = findWaysWithMem(arr, 0, value, mem);
+
+        int x = process(arr, 0, value);
+        int y = processOptimize(arr, value);
+
+        System.out.println("ways: " + ways);
+    }
+
+    static int findWays(int[] arr, int index, int rest) {
+        if (index > arr.length - 1 || rest < 0) {
+            return 0;
+        }
+        if (rest == 0) {
+            return 1;
+        }
+
+        int useWays = findWays(arr, index + 1, rest - arr[index]) + 1;
+        int unUseWays = findWays(arr, index + 1, rest);
+        return useWays + unUseWays;
+    }
+
+    static int findWaysWithMem(int[] arr, int index, int rest, int[][] mem) {
+        if (index > arr.length - 1 || rest < 0) {
+            return 0;
+        }
+        if (rest == 0) {
+            return 1;
+        }
+        if (mem[index][rest] != -1) {
+            return mem[index][rest];
+        }
+
+        int useWays = findWaysWithMem(arr, index + 1, rest - arr[index], mem);
+        int unUseWays = findWaysWithMem(arr, index + 1, rest, mem);
+        mem[index][rest] = useWays + unUseWays;
+        return mem[index][rest];
+    }
+
+    static int findTest(int[] arr, int n){
+        return findx(arr, 0 , n);
+    }
+//    static int findTestDp(int[] arr, int n) {
+//        int[] dp = new int[n + 1];
+//
+//        for (int i = arr.length - 1; i >= 0; i--) {
+//            for (int j = n; j >= 0; j--) {
+//                if(j - arr[i] < 0){
+//                    continue;
+//                }
+//                dp[i][j] = Math.min(dp[i + 1][j - arr[i]], dp[i + 1][j]);
+//            }
+//        }
+//        return dp[arr.length][n];
+//    }
+
+    static int findx(int[] arr, int index, int rest) {
+        if (rest == 0) {
+            return 1;
+        }
+        if (rest < 0 || index > arr.length - 1) {
+            return 0;
+        }
+        int use = findx(arr, index + 1, rest - arr[index]) + 1;
+        int unuse = findx(arr, index + 1, rest);
+
+        return Math.min(use, unuse);
+    }
+    public static void main2(String[] args) {
 //        int[] a = new int[]{2, 3, 7, 5, 3};
         int[] a = new int[]{12,2};
 //        int[] a = new int[]{16, 6, 15, 8, 3};
