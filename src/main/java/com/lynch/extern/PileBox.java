@@ -14,18 +14,61 @@ import java.util.*;
  */
 public class PileBox {
     public static void main(String[] args) {
-        int[][] arr = {{2, 6, 7}, {3, 4, 5}, {1, 1, 1}, {2, 3, 4}};
-        int maxHigh = pileBox(arr);
+        // [wi, di, hi]
+//        int[][] arr = {{2, 6, 7}, {3, 4, 5}, {1, 1, 1}, {2, 3, 4}};
+        int[][] arr = {{9, 9, 10}, {8, 10, 9}, {9, 8, 10}, {9, 8, 10}, {10, 8, 8}, {9, 8, 9}, {9, 8, 8}, {8, 9, 10}, {10, 9, 10},
+        {8, 8, 10}, {10, 9, 10}, {10, 9, 8}, {8, 9, 9}, {9, 10, 8}, {8, 9, 9}, {10, 10, 9}, {8, 9, 10}, {8, 10, 10}, {8, 9, 10}, {10, 10, 8}, 
+        {10, 10, 9}, {9, 10, 10}, {10, 8, 9}, {10, 10, 9}, {8, 9, 10}, {8, 8, 9}, {8, 10, 10}, {9, 9, 10}, {10, 8, 8}, {10, 10, 8}, {8, 9, 9}, 
+        {8, 9, 8}, {10, 10, 8}, {8, 10, 8}, {10, 9, 10}, {9, 9, 10}, {9, 9, 9}, {8, 9, 8}, {9, 8, 8}, {8, 9, 10}, {10, 10, 8}, {9, 9, 9}, {10, 10, 10},
+        {10, 9, 8}, {9, 8, 9}, {8, 8, 10}, {8, 8, 8}, {8, 8, 8}, {8, 9, 10}, {10, 9, 8}, {8, 10, 8},{8, 10, 10}, {9, 10, 10}, {8, 8, 9}, {9, 9, 9}, 
+        {10, 8, 8}, {8, 10, 10}, {9, 10, 9}, {9, 9, 8}, {8, 10, 9}, {9, 8, 8}, {9, 9, 10}, {9, 10, 10}, {8, 8, 10}};
+//        int max = pileBox(arr);
 
         int[] list = {1, 4, 7, 5};
         int maxIncreaseSubSeq = getMaxIncreaseSubSeq(list);
         int[] list2 = {2, 7, 3, 5, 4, 6};
         int maxIncreaseSubSeq2 = getMaxIncreaseSubSeq(list2);
 
-        List<Integer> maxIncreaseSubSeq1 = getMaxIncreaseSubSeq(arr, 2);
-        List<Integer> maxIncreaseSubSeq3 = getMaxIncreaseSubSeq(arr, 1);
-        System.out.println("max high: " + maxHigh);
+        Arrays.sort(arr,(a,b)->{
+            if(a[0]!=b[0]) {
+                return a[0] - b[0];
+            }else{
+                if(a[1]!=b[1]) {
+                    return a[1] - b[1];
+                }else{
+                    return b[2] - a[2];
+                }
+
+            }
+        });
+//        int pileBox2 = pileBox2(arr);
+        int[][] wideArr = getMaxIncreaseSubSeq(arr, 0);
+        int[][] deepArr = getMaxIncreaseSubSeq(wideArr, 1);
+        int[][] HiArr = getMaxIncreaseSubSeq(deepArr, 2);
+        int max = 0;
+        for(int[] item: HiArr){
+            max += item[2];
+        }
+        System.out.println("max high: " + max);
     }
+
+    public static int pileBox2(int[][] box) {
+        Arrays.sort(box, (a, b) -> a[0] - b[0]);
+        int[] dp = new int[box.length];
+        for (int i = 0; i < box.length; i++) {
+            dp[i] = box[i][2];
+        }
+        int res = 0;
+        for (int i = 0; i < box.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (box[j][0] < box[i][0] && box[j][1] < box[i][1] && box[j][2] < box[i][2])
+                    dp[i] = Math.max(dp[i], dp[j] + box[i][2]);
+            }
+            res = Math.max(res, dp[i]);
+        }
+        return res;
+    }
+
 
     /**
      * [wi, di, hi]
@@ -92,26 +135,29 @@ public class PileBox {
 
         for (int i = 1; i < n; i++) {
             dp[i] = dp[i - 1];
-            if (arr[i] - arr[i - 1] > 0) {
+            if (arr[i] > arr[i - 1]) {
                 dp[i]++;
             }
         }
         return dp[n - 1];
     }
 
-    static List<Integer> getMaxIncreaseSubSeq(int[][] arr, int col) {
+    static int[][] getMaxIncreaseSubSeq(int[][] arr, int col) {
         int n = arr.length;
         int[] dp = new int[n];
         dp[0] = 1;
-        List<Integer> list = new ArrayList<>();
+
+        List<int[]> list = new ArrayList<>();
+        list.add(arr[0]);
+
         for (int i = 1; i < n; i++) {
             dp[i] = dp[i - 1];
-            if (arr[i][col] - arr[i - 1][col] > 0) {
-                list.add(i);
+            if (arr[i][col] > arr[i - 1][col]) {
+                list.add(arr[i]);
                 dp[i]++;
             }
         }
         System.out.println("col: " + col + "max:" + dp[n - 1]);
-        return list;
+        return list.toArray(new int[list.size()][3]);
     }
 }
