@@ -34,7 +34,7 @@ public class PrimeMate {
         }
 
         int count1 = getCount(arr);
-        System.out.println("result: "+ count1);
+        System.out.println("result: " + count1);
     }
 
     public static int getCount(int[] arr) {
@@ -50,27 +50,54 @@ public class PrimeMate {
             }
         }
 
-        int count = 0;
-        for (int item : evens) {
-            for (int child : odds) {
+        return getMax(evens,odds);
+    }
+
+    public static int getMax(List<Integer> track1, List<Integer> track2){
+        int max = 0;
+        for (int i=0;i<track1.size() ;i++) {
+            Integer item = track1.get(i);
+            int count = 0;
+            boolean invalid = true;
+            for (int j = 0; j < track2.size(); j++) {
+                Integer child = track2.get(j);
                 int sum = item + child;
                 if ((sum & 1) == 0) {
                     continue;
                 }
                 if (isPrime(sum)) {
                     count++;
+                    invalid = false;
+                    track1.remove(item);
+                    track2.remove(child);
+                    int result = getMax(track1, track2);
+                    track1.add(i, item);
+                    track2.add(j, child);
+                    if (result == -1) {
+                        invalid = true;
+                        j++;
+//                        break;
+                    }else {
+                        count += result;
+                        max = Math.max(max, count);
+                        break;
+                    }
                 }
             }
+            if(invalid){
+                max = -1;
+//                return -1;
+            }
         }
-        return count;
+        return max;
     }
 
-    public static boolean isPrime(int value){
-         for(int i=2;i<Math.sqrt(value);i++){
-             if(value % i == 0){
-                 return false;
-             }
-         }
-         return true;
+    public static boolean isPrime(int value) {
+        for (int i = 2; i <= Math.sqrt(value); i++) {
+            if (value % i == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
