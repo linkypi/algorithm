@@ -2,11 +2,11 @@ package com.lynch;
 
 public class PrintAB {
     public static void main(String[] args) {
-        Print print=new Print();
+        Print print = new Print();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for(int i=0;i<10;i++){
+                for (int i = 0; i < 10; i++) {
                     print.printA();
                 }
 
@@ -16,38 +16,39 @@ public class PrintAB {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for(int i=0;i<10;i++){
+                for (int i = 0; i < 10; i++) {
                     print.printB();
                 }
 
             }
-        }).start();;
+        }).start();
+        ;
     }
 
-    static class Print{
-        boolean nowA=true;
+    static class Print {
+        boolean nowA = true;
 
-        synchronized void printA(){
-            while(!nowA){
+        synchronized void printA() {
+            while (!nowA) {
                 try {
                     this.wait();
                 } catch (Exception e) {
                 }
             }
-            nowA=false;
-            System.out.println(Thread.currentThread()+" "+"A");
+            nowA = false;
+            System.out.println(Thread.currentThread() + " " + "A");
             this.notify();
         }
 
-        synchronized void printB(){
-            while(nowA){
+        synchronized void printB() {
+            while (nowA) {
                 try {
                     this.wait();
                 } catch (Exception e) {
                 }
             }
-            nowA=true;
-            System.out.println(Thread.currentThread()+" "+"B");
+            nowA = true;
+            System.out.println(Thread.currentThread() + " " + "B");
             this.notify();
         }
 
