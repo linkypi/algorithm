@@ -14,9 +14,10 @@ import java.util.PriorityQueue;
  */
 public class MaxEvents {
     public static void main(String[] args) {
-        int[][] events = {{1, 4}, {4, 4}, {2, 2}, {3, 4}, {1, 1}};
+//        int[][] events = {{1, 4}, {4, 4}, {2, 2}, {3, 4}, {1, 1}};
+        int[][] events = {{1, 2}, {3, 4}, {2, 3}};
         int count = count(events);
-        System.out.println("max events : "+ count);
+        System.out.println("max events : " + count);
     }
 
     public static int count(int[][] arr) {
