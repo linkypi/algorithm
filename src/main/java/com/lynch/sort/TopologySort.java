@@ -74,7 +74,7 @@ public class TopologySort {
 
         List<Integer> result = new ArrayList<>();
 
-        // 将入度为 0 的节点出对，并将相关节点入度值减 1
+        // 将入度为 0 的节点出队，并将相关节点入度值减 1
         // 直到入度值减少为 0 时又将该节点放入队列中处理
         while (!deque.isEmpty()) {
             final Integer pop = deque.poll();

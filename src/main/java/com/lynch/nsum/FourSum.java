@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  *  给定一个包含 n 个整数的数组 nums，及一个目标值 target,
- *  判断 nums 中是否存在三个元素 a, b ,c, d
+ *  判断 nums 中是否存在四个元素 a, b ,c, d
  *  使得 a+b+c+d=target, 请找出所有满足条件的且不重复的四元组
  *
  *  四数之和可以从三数之和来求解
