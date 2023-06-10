@@ -16,6 +16,10 @@ import java.util.Random;
  */
 public class RandomWithWeights {
     public static void main(String[] args) {
+       int[] arr = {1,3,2,1};
+       Solution solution = new Solution(arr);
+        int value = solution.pickIndex();
+        System.out.println(value);
 
     }
 
