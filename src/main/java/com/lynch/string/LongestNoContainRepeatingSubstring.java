@@ -15,9 +15,23 @@ public class LongestNoContainRepeatingSubstring {
 //        int count = lengthOfLongestSubstring("pwwkew");
 //        int count = lengthOfLongestSubstring(" ");
         int count = lengthOfLongestSubstring("abba");
+        int size = findMax("abcxab");
 //        int count = lengthOfLongestSubstring("dvdf");
 //        int count = lengthOfLongestSubstring("tmmzuxt");
         System.out.println("result: "+ count);
+    }
+
+    public static int findMax(String str) {
+        int[] cache = new int[128];
+        int x = 0;
+        int size = 0;
+        for (int index = 0; index < str.length(); index++) {
+            char item = str.charAt(index);
+            x = Math.max(cache[item], x);
+            cache[item] = index + 1;
+            size = Math.max(size, index - x + 1);
+        }
+        return size;
     }
 
     public static int lengthOfLongestSubstring2(String s) {

@@ -1,5 +1,8 @@
 package com.lynch;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * @Author: linxueqi
  * @Description:
@@ -8,7 +11,13 @@ package com.lynch;
 public class QuitSort {
     public static void main(String[] args) {
         int[] arr = {1, 6, 2, 9, 3, 8, 5, 4};
-        qsort(arr, 0, arr.length - 1);
+//        qsort(arr, 0, arr.length - 1);
+
+        Map<String, String> map = new LinkedHashMap();
+
+        qs(arr, 0, arr.length - 1);
+//        qs(arr, 0, mid - 1);
+//        qs(arr, mid + 1, arr.length - 1);
 
         for (int i = 0; i < arr.length; i++) {
             if (i != arr.length - 1) {
@@ -18,6 +27,38 @@ public class QuitSort {
             }
         }
     }
+
+    public static void qs(int[] arr, int start, int end) {
+        if (start >= end) {
+            return;
+        }
+        int pivot = arr[start];
+
+        int left = start;
+        int right = end;
+        while (left < right) {
+            while (left < right && arr[left] < pivot) {
+                left++;
+            }
+            while (right > -1 && arr[right] > pivot) {
+                right--;
+            }
+            int temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+        }
+        arr[left] = pivot;
+
+        qs(arr, start, left - 1);
+        qs(arr, left + 1, end);
+    }
+
+
+
+
+
+
+
 
     public static void qsort(int[] arr, int start, int end) {
         if(start >= end){

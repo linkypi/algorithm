@@ -10,7 +10,7 @@ package com.lynch.dp;
  * @Description:
  * @createTime: 2022/3/10 20:33
  */
-public class ClimbStairs
+public class ClimbStairsMinCost
 {
     public static void main(String[] args) {
         int[] arr = {1, 100, 1, 1, 1, 100, 1, 1, 100, 1};

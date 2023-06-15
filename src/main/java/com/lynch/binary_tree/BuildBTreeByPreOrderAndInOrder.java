@@ -79,4 +79,38 @@ public class BuildBTreeByPreOrderAndInOrder {
             this.right = right;
         }
     }
+
+    public static void prepare(int[] preOrder, int[] inOrder){
+        Map<Integer, Integer> map = new HashMap<>();
+        // 记录中序遍历每个元素所在位置
+        for(int index=0;index< inOrder.length; index++){
+            map.put(inOrder[index], index);
+        }
+        Node node = build2(preOrder, 0, preOrder.length - 1, inOrder, 0, inOrder.length - 1, map);
+    }
+
+    public static Node build2(int[] preOrder, int preLeft, int preRight, int[] inOrder, int inLeft,int inRight, Map<Integer,Integer> map) {
+        if (preOrder == null || inOrder == null) {
+            return null;
+        }
+        if (preOrder.length == 0 || inOrder.length == 0) {
+            return null;
+        }
+
+        // 先序遍历的第一个节点必定为根节点
+        int root = preOrder[preLeft];
+        Node rnode = new Node(root);
+        // 根节点的左右两边即对应左子树与右子树
+        int index = map.get(root);
+        int leftChildSize = index - inLeft;
+        int rightChildSize = inRight - index;
+
+        // 先序：中  左  右
+        // 中序：左  中  右
+        Node left = build2(preOrder, preLeft + 1, preLeft + leftChildSize, inOrder, inLeft, index - 1, map);
+        Node right = build2(preOrder, preRight - rightChildSize, preRight, inOrder, index+1, inRight, map);
+        rnode.left = left;
+        rnode.right = right;
+        return rnode;
+    }
 }
