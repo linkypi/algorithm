@@ -3,7 +3,8 @@ package com.lynch.dp;
 import com.lynch.tools.Utils;
 
 /**
- * 题意: 给定的数组中有多个不同的数, 每个数字代表一个面值, 每种面值都有无数个, 给定一个数 X , 求找零的方式有多少种
+ * 题意: 给定的数组中有多个不同的数, 每个数字代表一个面值,
+ * 每种面值都有无数张可使用, 给定一个数 X , 求找零的方式有多少种
  */
 public class CoinValue2 {
     public static void main(String[] args) {
@@ -12,6 +13,10 @@ public class CoinValue2 {
         int count = process(arr1, 0, 10);
         System.out.println("result: " + count);
 
+
+        int[] arr12 = new int[]{3, 5, 1, 2, 4, 10};
+        int xx = dp(arr12,40);
+        int xx2 = dpOptimize(arr12,40);
 
         int times = 20;
         int minValue = 1, maxValue = 25;
@@ -79,6 +84,12 @@ public class CoinValue2 {
         return dp[0][aim];
     }
 
+    /**
+     * 使用斜率优化
+     * @param arr
+     * @param aim
+     * @return
+     */
     private static int dpOptimize(int[] arr, int aim) {
         if (arr == null || arr.length == 0) {
             return 0;
