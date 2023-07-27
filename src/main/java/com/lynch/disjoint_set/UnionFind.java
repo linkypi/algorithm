@@ -11,7 +11,7 @@ import lombok.Data;
 public class UnionFind {
     // parent[i] = k 表示 i 的父节点为 k
     private final int[] parent;
-    // size[i] = k 表示如i是代表节点，其集合大小
+    // size[i] = k 表示以 i 为父节点时，其集合大小
     private final int[] size;
     private final int[] help;
     private int sets;

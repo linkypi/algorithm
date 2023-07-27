@@ -13,13 +13,15 @@ public class CoinValue {
     public static void main(String[] args) {
         int[] arr = {2, 3, 7, 5, 3, 6, 4};
         int value = 20;
-        int ways = findWays(arr, 0, value);
+        int ways = process(arr, 0, value);
+        int ways5 = findT(arr, 0, value);
+        int ways3 = findTWithDP(arr, value);
 
         int[][] mem = new int[arr.length][value+1];
         for (int i = 0; i < arr.length; i++) {
             Arrays.fill(mem[i], -1);
         }
-        int ways2 = findWaysWithMem(arr, 0, value, mem);
+//        int ways2 = find(arr, 0, value, mem);
 
         int x = process(arr, 0, value);
         int y = processOptimize(arr, value);
@@ -27,52 +29,65 @@ public class CoinValue {
         System.out.println("ways: " + ways);
     }
 
-    static int findWays(int[] arr, int index, int rest) {
-        if (index > arr.length - 1 || rest < 0) {
+    static int findT(int[] arr, int index, int rest) {
+        if (rest == 0) {
             return 0;
         }
-        if (rest == 0) {
-            return 1;
+        if (rest < 0) {
+            return -1;
+        }
+        int n = arr.length;
+        if (index > n - 1) {
+            return -1;
         }
 
-        int useWays = findWays(arr, index + 1, rest - arr[index]) + 1;
-        int unUseWays = findWays(arr, index + 1, rest);
-        return useWays + unUseWays;
+        // 使用当前价值的硬币或不使用
+        int used = findT(arr, index + 1, rest - arr[index]);
+        int unused = findT(arr, index + 1, rest);
+        if (used == -1 && unused == -1) {
+            return -1;
+        }
+        if (used == -1) {
+            return unused;
+        }
+        if (unused == -1) {
+            return used + 1;
+        }
+
+        return Math.min(unused, used);
     }
 
-    static int findWaysWithMem(int[] arr, int index, int rest, int[][] mem) {
-        if (index > arr.length - 1 || rest < 0) {
-            return 0;
+    static int findTWithDP(int[] arr, int rest) {
+        int n = arr.length;
+        // dp[i][j] 表示从arr硬币数组前i+1个可选硬币中，可以凑出j的最少硬币数
+        int[][] dp = new int[n][rest + 1];
+
+        // 处理边界
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(dp[i], -1);
         }
-        if (rest == 0) {
-            return 1;
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = 0;
         }
-        if (mem[index][rest] != -1) {
-            return mem[index][rest];
+        dp[0][rest] = arr[0] == rest? 1: 0;
+
+        for (int j = 0; j <= rest; j++) {
+            for (int i = 0; i < n; i++) {
+
+//                    dp[i][j] = Math.min(dp[i][j], dp[i][j - arr[i]]);
+                int min = Integer.MAX_VALUE;
+                for (int k = 0; k <= i; k++) {
+                    if (j - arr[k] >= 0) {
+                        int temp = Math.min(dp[k][j], dp[k][j - arr[k]]);
+                        min = Math.min(min, temp);
+                    }
+                    dp[i][j] = min == Integer.MAX_VALUE ? 0 : min;
+                }
+            }
         }
 
-        int useWays = findWaysWithMem(arr, index + 1, rest - arr[index], mem);
-        int unUseWays = findWaysWithMem(arr, index + 1, rest, mem);
-        mem[index][rest] = useWays + unUseWays;
-        return mem[index][rest];
+        return dp[n-1][rest];
     }
-
-    static int findTest(int[] arr, int n){
-        return findx(arr, 0 , n);
-    }
-//    static int findTestDp(int[] arr, int n) {
-//        int[] dp = new int[n + 1];
-//
-//        for (int i = arr.length - 1; i >= 0; i--) {
-//            for (int j = n; j >= 0; j--) {
-//                if(j - arr[i] < 0){
-//                    continue;
-//                }
-//                dp[i][j] = Math.min(dp[i + 1][j - arr[i]], dp[i + 1][j]);
-//            }
-//        }
-//        return dp[arr.length][n];
-//    }
 
     static int findx(int[] arr, int index, int rest) {
         if (rest == 0) {
@@ -86,6 +101,7 @@ public class CoinValue {
 
         return Math.min(use, unuse);
     }
+
     public static void main2(String[] args) {
 //        int[] a = new int[]{2, 3, 7, 5, 3};
         int[] a = new int[]{12,2};
@@ -182,7 +198,7 @@ public class CoinValue {
 
     /**
      * 最优解
-     *
+     * 同样的递归转动态规范的转换过程可以参考 {@link com.lynch.dp.MinPath_1575}
      * @param arr
      * @param value
      * @return
