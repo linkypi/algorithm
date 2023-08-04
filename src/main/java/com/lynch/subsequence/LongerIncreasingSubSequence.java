@@ -1,5 +1,7 @@
 package com.lynch.subsequence;
 
+import org.junit.Test;
+
 /**
  * 给定一个数组，求最长递增子序列长度
  * @author: linxueqi
@@ -7,8 +9,13 @@ package com.lynch.subsequence;
  * @createTime: 2022/3/28 21:58
  */
 public class LongerIncreasingSubSequence {
-    public static void main(String[] args) {
 
+    @Test
+    public void test() {
+        int[] arr = {0, 1, 0, 3, 2, 3};
+//        int[] arr = {10,9,2,5,3,7,101,18};
+        int count = find(arr);
+        System.out.println("count: " + count);
     }
 
     private static int find(int[] arr) {

@@ -22,47 +22,46 @@ public class Prim {
                 {2, 3, 6}
         };
 
-
         int minCostWithPrim = minCostWithPrim(metrics);
         System.out.println("min cost: "+ minCostWithPrim);
     }
 
-    private int minCostWithPrim(int[][] metrics){
+    private int minCostWithPrim(int[][] metrics) {
 
         // 记录每个节点的邻接节点
         HashMap<Integer, List<Edge>> adjs = new HashMap<>();
-        for (int[] item: metrics){
+        for (int[] item : metrics) {
             int from = item[0];
             int to = item[1];
             int w = item[2];
-            initAdj(adjs, from, to,w);
-            initAdj(adjs, to, from,w);
+            initAdj(adjs, from, to, w);
+            initAdj(adjs, to, from, w);
         }
 
         // 记录已加入的节点数，防止重复加入
         Set<Integer> set = new HashSet<>();
 
-        PriorityQueue<Edge> queue = new PriorityQueue<Edge>((a,b)->a.weight - b.weight);
+        PriorityQueue<Edge> queue = new PriorityQueue<Edge>((a, b) -> a.weight - b.weight);
         // 随机选择一个端点加入
         List<Edge> edges = adjs.get(metrics[0][0]);
-        for(Edge item: edges){
+        for (Edge item : edges) {
             queue.offer(item);
         }
         set.add(metrics[0][0]);
 
         int min = 0;
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             Edge edge = queue.poll();
 
             // 已访问过的节点则跳过
-            if(set.contains(edge.to)){
-               continue;
+            if (set.contains(edge.to)) {
+                continue;
             }
             min += edge.weight;
 
             set.add(edge.to);
             List<Edge> edges1 = adjs.get(edge.to);
-            for(Edge item: edges1){
+            for (Edge item : edges1) {
                 queue.offer(item);
             }
         }
