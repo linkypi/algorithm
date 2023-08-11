@@ -1,5 +1,7 @@
 package com.lynch.matrix;
 
+import org.junit.Test;
+
 /**
  * 给定一个方阵，其中每个单元 (像素) 非黑即白。设计一个算法，找出 4 条边皆为黑色像素的最大子方阵。
  * 返回一个数组 [r, c, size] ，其中r,c分别代表子方阵左上角的行号和列号，
@@ -26,7 +28,9 @@ public class MaxBlackMatrix {
     public static int[] find(int[][] matrix) {
         int rows = matrix.length;
         int cols = matrix[0].length;
+        // 统计每行从右到左连续出现0的个数
         int[][] towardRights = new int[rows][cols];
+        // 统计每列从下到上连续出现0的个数
         int[][] towardDowns = new int[rows][cols];
 
         for (int i = 0; i < rows; i++) {

@@ -50,6 +50,7 @@ public class RandomWithBlackList {
                 }
             }
 
+            // list 数组后半部分用于存放黑名单数据
             for(Integer key: map.keySet()){
                 list.add(key);
             }
