@@ -1,24 +1,29 @@
-package com.lynch.extern;
+package com.lynch.string;
+
+import org.junit.Test;
 
 public class KMP {
-    public static void main(String[] args) {
+    @Test
+    public void test() {
 
-        int[] arr = {1,-2,3,10,-4,7,2,-5};
-        System.out.println();
+        String source = "abgabeabeabxgt";
+        String match = "abeabx";
+        int index = find(source.toCharArray(), match.toCharArray());
+        System.out.println("index: "+ index);
     }
 
     /**
      * 判断某个元素字符串是否包含字串
-     * @param str1 原始字符串
-     * @param str2 需要匹配的子串
+     * @param source 原始字符串
+     * @param match 需要匹配的子串
      * @return
      */
-    private static int find(char[] str1, char[] str2) {
-        int[] next = getNextArr(str2);
+    private int find(char[] source, char[] match) {
+        int[] next = getNextArr(match);
 
         int p1 = 0, p2 = 0;
-        while (p1 < str1.length && p2 < str2.length) {
-            if (str1[p1] == str2[p2]) {
+        while (p1 < source.length && p2 < match.length) {
+            if (source[p1] == match[p2]) {
                 p1++;
                 p2++;
             }else if(next[p2] == -1){
@@ -29,7 +34,7 @@ public class KMP {
                 p2 = next[p2];
             }
         }
-        return p2 == str2.length ? p2 - p1 : -1;
+        return p2 == match.length ? p2 - p1 : -1;
     }
 
     /**
@@ -50,7 +55,7 @@ public class KMP {
      *
      * 在求解next数组时会发现，对任意位置 i 的求解都会依赖于前一个位置 i-1 的值
      * 1. 从第9步开始可以看出， 最后一个字符b的值依赖于前一个位置a在next数组中的值
-     * 此时a在next数组的值为 0， 记得cn，而此时 str[cn] 恰好等于 str[i-1]，两者长度都是1，所以此时next数组的值为 1.
+     * 此时a在next数组的值为 0， 记为 cn，而此时 str[cn] 恰好等于 str[i-1]，两者长度都是1，所以此时next数组的值为 1.
      * 2. 第十步最后一个字符c的前一个字符b对应的next数组值为 1， 即cn=1 （上一步已求出），而此时 str[cn] 恰好等于 str[i-1]
      * 所以此时next数组值为next数组在 i-1位置的值加一。
      * 3. 同理，后面的每个步骤的next值都是依赖于前一个步骤值，只要str[cn] 恰好等于 str[i-1]
@@ -58,7 +63,7 @@ public class KMP {
      * @param arr 待查找的字符串
      * @return
      */
-    public static int[] getNextArr(char[] arr) {
+    public int[] getNextArr(char[] arr) {
 
         int N = arr.length;
         if (N == 1) {
@@ -73,7 +78,7 @@ public class KMP {
         while (i < N) {
             if (arr[i - 1] == arr[nextValue]) {
                 next[i++] = ++nextValue;
-            } else if (nextValue > -1) {
+            } else if (nextValue > 0) {
                 nextValue = next[nextValue];
             } else {
                 next[i++] = 0;
