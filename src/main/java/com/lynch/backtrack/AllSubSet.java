@@ -18,7 +18,6 @@ public class AllSubSet {
     public void test() {
         int[] arr = {1, 2, 3};
         boolean[] used = new boolean[arr.length];
-
         findSubSet(arr, path, 0);
 
         System.out.println("all sub set: " + result);
@@ -28,7 +27,7 @@ public class AllSubSet {
     public void testNoRepeat() {
         int[] arr = {1, 2, 2, 3};
         boolean[] used = new boolean[arr.length];
-
+        Arrays.sort(arr);
         findSubSetNoRepeat(arr, path, 0);
 
         System.out.println("all sub set no repeat: " + result);
