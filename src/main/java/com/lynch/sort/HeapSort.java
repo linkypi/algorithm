@@ -1,5 +1,7 @@
 package com.lynch.sort;
 
+import java.util.Arrays;
+
 public class HeapSort extends AbstractSort {
     public HeapSort() {
     }
@@ -20,7 +22,41 @@ public class HeapSort extends AbstractSort {
 //
 
     }
+    @org.junit.Test
+    public void test(){
+        int[] arr = {8,2,5,3,6};
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            heapify(arr, n-i);
+            int temp = arr[0];
+            arr[0] = arr[n-i-1];
+            arr[n-i-1] = temp;
+        }
+        System.out.print("heapify result: "+ Arrays.toString(arr));
+    }
 
+    public void heapify(int[] arr, int heapSize){
+        if(heapSize <=0){
+            return;
+        }
+        int start = heapSize/2 +1;
+        for (int i = start; i >= 0; i--) {
+            int maxIndex = i;
+            int left = 2 * i +1;
+            int right = 2 * i +2;
+            if(left < heapSize && arr[left] > arr[maxIndex]){
+                maxIndex = left;
+            }
+            if(right < heapSize && arr[right] > arr[maxIndex]){
+                maxIndex = right;
+            }
+            if(maxIndex != i){
+                int temp = arr[i];
+                arr[i] = arr[maxIndex];
+                arr[maxIndex] = temp;
+            }
+        }
+    }
 
     private int heapSize = 0;
 
