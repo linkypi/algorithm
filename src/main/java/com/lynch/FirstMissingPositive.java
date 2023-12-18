@@ -17,7 +17,8 @@ public class FirstMissingPositive {
     @Test
     public void test() {
 
-        int[] arr = {7,8,9,11,12};
+//        int[] arr = {7,8,9,11,12};
+        int[] arr = {2,4,1,3};
         int result = find(arr);
         System.out.println("result: "+ result);
     }

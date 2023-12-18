@@ -12,9 +12,10 @@ public class MinSubStr {
 //        String source = "ab";
 //        String target = "b";
 
-        String source = "aa";
-        String target = "aa";
+        String source = "oharaop";
+        String target = "aop";
         String minSubStr = getMinSubStr(source, target);
+        int x = find(source, target);
         System.out.print("min sub string: " + minSubStr);
     }
 
@@ -73,6 +74,54 @@ public class MinSubStr {
         }
         // substring 内部实现导致 end 必须加 1
         return source.substring(start, start + min);
+    }
+
+    /**
+     * 来自左神题解
+     * @param source
+     * @param target
+     * @return
+     */
+    private static int find(String source, String target) {
+        int[] count = new int[128];
+        for (int i = 0; i < target.length(); i++) {
+            count[target.charAt(i)]++;
+        }
+
+        // 记录无效字符串个数
+        int invalidTimes = 0;
+
+        int n = target.length();
+        int len = source.length();
+        int right = 0;
+        for (right = 0; right < n; right++) {
+            char x = source.charAt(right);
+            if (count[x] <= 0) {
+                invalidTimes++;
+            }
+            count[x]--;
+        }
+
+        for (; right < len; right++) {
+            // 已收集到所有有效字符即可返回起始位置索引
+            if (invalidTimes == 0) {
+                return right - n;
+            }
+
+            // 从右边开始扩大窗口, 若遇到无效字符则记录
+            char x = source.charAt(right);
+            if (count[x]-- <= 0) {
+                invalidTimes++;
+            }
+
+            // 从左边开始收缩窗口, 若出现的字符经过++操作后还是小于 0 说明该字符原来存放的无效字符
+            x = source.charAt(right - n);
+            if (count[x]++ < 0) {
+                invalidTimes--;
+            }
+        }
+
+        return invalidTimes == 0 ? (len - n) : -1;
     }
 
 
