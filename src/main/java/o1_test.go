@@ -1,0 +1,82 @@
+/*
+ * @Author: LinkyPi trouble.linky@gmail.com
+ * @Date: 2024-01-26 17:25:36
+ * @LastEditors: LinkyPi trouble.linky@gmail.com
+ * @LastEditTime: 2024-01-26 17:32:17
+ * @FilePath: /algorithm/src/main/java/o1_test.go
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+package main
+
+import (
+	"math/rand"
+	"testing"
+)
+
+func TestO1(t *testing.T) {
+	collect := RandomizedCollection{
+		idx:  make(map[int]map[int]struct{}),
+		nums: make([]int, 0),
+	}
+
+	collect.Insert(9)
+	collect.Insert(9)
+	collect.Insert(1)
+	collect.Insert(1)
+	collect.Remove(1)
+	collect.Remove(3)
+}
+
+type RandomizedCollection struct {
+	idx  map[int]map[int]struct{}
+	nums []int
+}
+
+/** Initialize your data structure here. */
+func Constructor() RandomizedCollection {
+	return RandomizedCollection{
+		idx: map[int]map[int]struct{}{},
+	}
+}
+
+/** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+func (r *RandomizedCollection) Insert(val int) bool {
+	ids, has := r.idx[val]
+	if !has {
+		ids = map[int]struct{}{}
+		r.idx[val] = ids
+	}
+	ids[len(r.nums)] = struct{}{}
+	r.nums = append(r.nums, val)
+	return !has
+}
+
+/** Removes a value from the collection. Returns true if the collection contained the specified element. */
+func (r *RandomizedCollection) Remove(val int) bool {
+	ids, has := r.idx[val]
+	if !has {
+		return false
+	}
+	var i int
+	for id := range ids {
+		i = id
+		break
+	}
+	n := len(r.nums)
+	r.nums[i] = r.nums[n-1]
+	delete(ids, i)
+	delete(r.idx[r.nums[i]], n-1)
+	if i < n-1 {
+		r.idx[r.nums[i]][i] = struct{}{}
+	}
+	if len(ids) == 0 {
+		delete(r.idx, val)
+	}
+	r.nums = r.nums[:n-1]
+	return true
+}
+
+/** Get a random element from the collection. */
+func (r *RandomizedCollection) GetRandom() int {
+	return r.nums[rand.Intn(len(r.nums))]
+}
