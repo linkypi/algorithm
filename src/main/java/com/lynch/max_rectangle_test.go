@@ -8,7 +8,10 @@
  */
 package main
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 // https://leetcode.cn/problems/word-rectangle-lcci
 // 给定一份单词的清单，设计一个算法，创建由字母组成的面积最大的矩形，
@@ -25,18 +28,107 @@ import "testing"
 //    "hard"
 // ]
 
-func TestMaxRetangle(t *testing.T) {
-
+func TestMaxRectangle(t *testing.T) {
+	//words := []string{"this", "real", "hard", "trh", "hea", "iar", "sld"}
+	words := []string{"eat", "tea", "tan", "ate", "nat", "bat"}
+	//words := []string{"aa"}
+	result := maxRectangle(words)
+	fmt.Println("max area: ", result)
 }
+
+var maxMatrix = make([]string, 0)
+var maxArea = 0
 
 type TrieNode struct {
-	Leaf     bool
-	Children map[int]*TrieNode
+	IsWord   bool
+	Children map[string]*TrieNode
 }
 
-func find(words []string) {
-	root := buildeTrie(words)
+func buildTrie(words []string) *TrieNode {
+	root := &TrieNode{}
+	root.Children = make(map[string]*TrieNode, 26)
+	for _, w := range words {
+		temp := root
+		for _, c := range w {
+			child, ok := temp.Children[string(c)]
+			if !ok {
+				cur := &TrieNode{}
+				cur.Children = make(map[string]*TrieNode, 26)
+				temp.Children[string(c)] = cur
+				temp = cur
+			} else {
+				temp = child
+			}
+		}
+		temp.IsWord = true
+	}
+	return root
+}
 
+func backTrace(ws []string, matrix []string, preNodes []*TrieNode) {
+
+	// 矩阵行高不能大于每一行单词的列数
+	rowCount := len(matrix)
+	if rowCount > 0 {
+		if rowCount > len(matrix[0]) {
+			return
+		}
+	}
+	rowWord := ""
+	if rowCount > 0 {
+		rowWord = matrix[rowCount-1]
+		if len(rowWord)*rowCount <= maxArea {
+			return
+		}
+	}
+
+	// 判断矩阵没一列是否有效, 有效则直接计算结果， preNodes 会记录上次已经匹配到的节点
+	temp := make([]*TrieNode, 0)
+
+	for j := 0; j < len(rowWord); j++ {
+		c := rowWord[j]
+		if preNodes[j] == nil || len(preNodes[j].Children) == 0 {
+			return
+		}
+		r, ok := preNodes[j].Children[string(c)]
+		// 若某一列字符不匹配则说明该矩阵无效
+		if !ok {
+			return
+		}
+		temp = append(temp, r)
+	}
+	if len(temp) > 0 {
+		preNodes = temp
+		// 若都已达到叶子节点，则计算矩阵面积
+		wordEnd := true
+		for j := 0; j < len(rowWord); j++ {
+			if !preNodes[j].IsWord {
+				wordEnd = false
+				break
+			}
+		}
+		if wordEnd {
+			area := len(rowWord) * rowCount
+			if area > maxArea {
+				maxArea = area
+				maxMatrix = append([]string{}, matrix...)
+			}
+		}
+	}
+
+	for x := 0; x < len(ws); x++ {
+		w := ws[x]
+		matrix = append(matrix, w)
+		backTrace(ws, matrix, preNodes)
+		matrix = matrix[0 : len(matrix)-1]
+	}
+}
+
+func maxRectangle(words []string) []string {
+	maxMatrix = make([]string, 0)
+	maxArea = 0
+	root := buildTrie(words)
+	//fmt.Println(root)
 	// 将长度相同的字符统一为一组, 方便矩阵面积统计
 	lenGroup := make(map[int][]string)
 	for _, w := range words {
@@ -45,103 +137,18 @@ func find(words []string) {
 			list = make([]string, 0)
 		}
 		list = append(list, w)
+		lenGroup[len(w)] = list
 	}
 
 	// 对每一组长度相同的字符进行比较, 符合列要求的即可直接计算出面积
-	for len, ws := range lenGroup {
-		for i, w1 := range ws {
-			for j, w2 := range ws {
-				if i == j {
-					continue
-				}
-
-				// 判断列是否有效, 无效的则忽略
-
-			}
+	for wlen, ws := range lenGroup {
+		preNodes := make([]*TrieNode, 0, wlen)
+		for i := 0; i < wlen; i++ {
+			preNodes = append(preNodes, root)
 		}
+		matrix := make([]string, 0)
+		backTrace(ws, matrix, preNodes)
 	}
 
-}
-func backTrace(ws []string,path []string, used map[int]struct,root *TrieNode){
-
-	Begin:
-	for x:=0;x<len(ws);x++{
-		w := ws[x]
-		if _,ok:=used[x]; ok{
-			continue
-		}
-
-		used[x] = struct{}
-		path = append(path, w)
-
-		// 判断 path 组成的矩阵是否有效, 有效则直接计算结果
-		row := len(path)
-		for i:=0;i<row;i++{
-			var r *TrieNode = nil
-			var ok = false
-			for j:=0;j<len(path[i]);j++{
-			   c := path[i][j]
-			   r, ok = root.Children[c]
-			   if !ok{
-				   x++
-				  goto Begin
-			   }
-			}
-		}
-
-		//做选择
-        backTrace(ws, used)
-		//撤销
-		path = path[0:len(path)-1]
-		used[i] = nil
-	}
-}
-
-var maxArea = 0
-
-func dfs(idx int, ws []string, used map[int]struct, root *TrieNode)bool{
-	w1 := ws[idx]
-
-	row := 2
-	for j, w2 := range ws {
-		if _,ok:=used[j]; ok {
-			continue
-		}
-		// 对比 w1, w2 每一列是否都能匹配
-        for i:=0;i<len(w1);i++ {
-			// 判断列是否有效, 无效的则忽略
-            r1,ok := root.Children[w1[i]-'a']
-			if !ok{
-				return false
-			}
-			r2,ok := r1.Children[w2[i]-'a']
-			if !ok{
-				return false
-			}
-			if r1.Leaf && r2.Leaf{
-				area := (i+1)*row
-			}
-		}
-        // w1 w2 可以组成有效矩阵, 则继续从 ws 中取出可以字符串进行匹配
-		used[idx] = struct{}
-		used[j] = struct{}
-		w1 = w2
-		row++
-	}
-}
-
-func buildeTrie(words []string) *TrieNode {
-	root := &TrieNode{}
-	root.Children = make(map[int]*TrieNode, 26)
-	for _, w := range words {
-		temp := root
-		for _, c := range w {
-			x := c - 'a'
-			cur := &TrieNode{}
-			temp.Children[int(x)] = cur
-			temp = cur
-		}
-		temp.Leaf = true
-	}
-	return root
+	return maxMatrix
 }
