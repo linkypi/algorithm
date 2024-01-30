@@ -3,6 +3,7 @@ package com.lynch.matrix;
 import org.junit.Test;
 
 /**
+ * https://leetcode.cn/problems/max-black-square-lcci/
  * 给定一个方阵，其中每个单元 (像素) 非黑即白。设计一个算法，找出 4 条边皆为黑色像素的最大子方阵。
  * 返回一个数组 [r, c, size] ，其中r,c分别代表子方阵左上角的行号和列号，
  * size 是子方阵的边长。若有多个满足条件的子方阵，返回 r 最小的，若 r 相同，

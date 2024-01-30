@@ -10,6 +10,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 )
 
@@ -29,8 +30,8 @@ import (
 // ]
 
 func TestMaxRectangle(t *testing.T) {
-	//words := []string{"this", "real", "hard", "trh", "hea", "iar", "sld"}
-	words := []string{"eat", "tea", "tan", "ate", "nat", "bat"}
+	words := []string{"this", "real", "hard", "trh", "hea", "iar", "sld"}
+	//words := []string{"eat", "tea", "tan", "ate", "nat", "bat"}
 	//words := []string{"aa"}
 	result := maxRectangle(words)
 	fmt.Println("max area: ", result)
@@ -140,8 +141,18 @@ func maxRectangle(words []string) []string {
 		lenGroup[len(w)] = list
 	}
 
+	// 对单词长度进行降序排序
+	keys := make([]int, 0, 8)
+	for k, _ := range lenGroup {
+		keys = append(keys, k)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return keys[i] > keys[j]
+	})
+
 	// 对每一组长度相同的字符进行比较, 符合列要求的即可直接计算出面积
-	for wlen, ws := range lenGroup {
+	for _, wlen := range keys {
+		ws := lenGroup[wlen]
 		preNodes := make([]*TrieNode, 0, wlen)
 		for i := 0; i < wlen; i++ {
 			preNodes = append(preNodes, root)
