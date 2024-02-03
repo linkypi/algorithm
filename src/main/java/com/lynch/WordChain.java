@@ -45,15 +45,6 @@ public class WordChain {
 
     @Test
     public void testWordChain(){
-        String a ="asdf";
-        a.contains("xxx")
-        PriorityQueue<Integer> priorityQueue =  new PriorityQueue<>((a,b)->{return a-b;});
-//        PriorityQueue<Integer> priorityQueue =  new PriorityQueue<>();
-        priorityQueue.add(12);
-        priorityQueue.add(5);
-        priorityQueue.add(2);
-        priorityQueue.add(9);
-        System.out.print(priorityQueue);
         String beginWord = "hit";
         String endWord = "cog";
         String[] wordList = new String[]{"hot","dot","dog","lot","log","cog"};
