@@ -140,6 +140,11 @@ public class DC3 {
                 s12[sa12[i]] = i + 1;
             }
         } else {
+            // Example:
+            // S1-S2: 1 4 7 2 5
+            // index: 0 1 2 3 4  <- 上面S1-S2组合而成的数组索引下标
+            //   s12: 3 5 1 2 4  <- S1-S2组合经过基数排序后的结果排名， 当前索引对应的是S1-S2的索引，s12[i] 才是具体排名
+            //  sa12: 2 3 0 4 1  <- sa12记录的就是S1-S2组合中排名对应的索引值，即sa12[i]为S1-S2组合中的索引，i为具体排名
             for (int i = 0; i < n02; i++) {
                 sa12[s12[i] - 1] = i;
             }
@@ -151,8 +156,8 @@ public class DC3 {
         // 需要三个维度逐维度计算，而到此S12已经有结果，所有可以直接使用S12的结果作为第0维的计算入参即可
         int[] s0 = new int[n0], sa0 = new int[n0];
         for (int i = 0, j = 0; i < n02; i++) {
-            if (sa12[i] < n0) {
-                s0[j++] = 3 * sa12[i];
+            if (sa12[i] < n0) {// 找到索引小于
+                s0[j++] = 3*sa12[i];
             }
         }
         System.out.printf(" dc3, before sort s0: %s\n", Arrays.toString(s0));

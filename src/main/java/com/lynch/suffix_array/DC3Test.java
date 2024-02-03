@@ -21,7 +21,7 @@ public class DC3Test {
         }
         DC3 dc3 = new DC3(arr, 's' - 'a');
         System.out.printf("       dc3: %s\n",Arrays.toString(dc3.sa));
-//
+
 //        Thread.sleep(200);
 //        MyDC3 customDC3 = new MyDC3();
 //        customDC3.set(str);

@@ -3,7 +3,6 @@ package com.lynch.suffix_array;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * @author: lynch
@@ -99,36 +98,62 @@ public class MyDC3 {
         if (range < n12) {
             System.out.printf(" custom dc3, before radix re-sort: %s\n", Arrays.toString(s12));
             sa12 = skew(s12, n12, range);
-            // 将结果转换为实际下标对应的排名，以便后面归并排序
             for (int i = 0; i < n12; i++) {
-                int index12 = 3 * i + 1;
-                if (index12 > n) {
-                    index12 = 3 * (i - n1) + 2;
+                int index = i * 3 + 1;
+                if (index >= n) {
+                    index = (i-n1) * 3 + 2;
                 }
-                s12[sa12[i]] = index12;
+                s12[sa12[i]] = index;
             }
-        } else {
-            // 还原S12排名
+        }else{
+            int[] temp = new int[n12];
             for (int i = 0; i < n12; i++) {
-                s12[i] = sa12[i];
+                int index = i*3+1;
+                if(index>=n){
+                    index=(i-n1)*3+2;
+                }
+                temp[s12[i]-1] = index;
             }
+            s12 = temp;
         }
+
         System.out.printf(" custom dc3, s12 final range: %s\n", Arrays.toString(s12));
 
         // 求出S0排名
         // 此处是利用了S12的排名来直接计算结果。正如前面计算S12排名一样，通常
         // 需要三个维度逐维度计算，而到此S12已经有结果，所有可以直接使用S12的结果作为第0维的计算入参即可
+        // 所以此处需要对0 3 6 9 等模3余0的索引顺序根据S12的结果来排名，随后才可以做基数排序
         int[] s0 = new int[n0];
-        for (int i = 0, j = 0; i < n; i++) {
-            if (i % 3 < n1) {
-//                s0[j++] = s12[];
+        // 仅需遍历 S1 区域得到排名
+        int x = 0;
+        for (int j = 0; j < n12; j++) {
+            if (s12[j] % 3 == 1) {
+                s0[x++] = s12[j] - 1;
             }
+//            int idx = (s12[j] - 1);
+//            s0[j] = idx;
+//                if (r == s12[j]) {
+//                    // 找到排名 j （从0开始）, 通过 j 找到实际索引
+//                    //     S1 | S2
+//                    //     1 4 2 5 <- 模3余1 |  模3余2 的索引组合
+//                    //s12: 2 4 1 3 <- 排名对应的索引，下标为排名
+//                    //此处就是通过s12排名找到最近的模3余0的索引
+//                    int idx = 3 * j + 1; // 1, 4, 7, 10 ...
+//                    s0[idx / 3] = idx - 1;
+//                    break;
+//                }
         }
+        while(x<n0){
+            s0[x++] = x*3;
+        }
+
+//        for (int i = 0, j = 0; i < n0; i++) {
+//            s0[j++] = 3*s12[i]; // 遵循S1在前 S2在后的方式来赋值，此处仅需考虑S1，因为S1在上面已经基于S2得到结果
+//        }
 
         // 首先对比s0的首个字符的排名
         System.out.printf(" custom dc3, before sort s0: %s\n", Arrays.toString(s0));
         int[] sa0 = radixSort(nums, s0, n0, 0, max);
-
         for (int i = 0; i < n0; i++) {
             s0[i] = sa0[i];
         }
@@ -137,63 +162,50 @@ public class MyDC3 {
         System.out.printf(" custom dc3, before merge s0: %s\n", Arrays.toString(s0));
         System.out.printf(" custom dc3, before merge s12: %s\n", Arrays.toString(s12));
 
-        // 合并 S0 与 S12 排名
+        // 最后的结果需按照
         int[] sa = new int[n];
         range = 0;
         int i = 0, j = 0;
         for (; i < n0 && j < n12; ) {
             int index0 = s0[i];
-            int index12 = s12[j];
-            boolean done= false;
+            int index12 = sa12[j];
+            if (nums[index0] < nums[index12]) {
+                sa[range++] = index0;
+                i++;
+                continue;
+            }
+            if(nums[index0] > nums[index12]) {
+                sa[range++] = index12;
+                j++;
+                continue;
+            }
+
+            int i0=index0, i12=index12;
             // 头一个字符相同则依次往后对比,最多比较三次即可得到结果
-            while (nums[index0] == nums[index12]) {
-                index0++;
-                index12++;
-                // 只要一个出现在 S0 区别，那么只能逐个字符比较，无法利用S12结果比较
-                if (index0 % 3 == 0 || index12 % 3 == 0) {
+            while (nums[i0] == nums[i12]) {
+                i0++;
+                i12++;
+                // 只要一个出现在 S0 区别，那么只能逐个字符比较，无法利用S12的结果比较
+                if (i0 % 3 == 0 || i12 % 3 == 0) {
                     continue;
                 }
 
-                int r0 = -1;
-                for (int k = 0; k < n0; k++) {
-                    if (s12[k] == index0) {
-                        r0 = k;
-                        break;
-                    }
-                }
-                int r12 = -1;
-                for (int k = 0; k < n12; k++) {
-                    if (s12[k] == index12) {
-                        r12 = k;
-                        break;
-                    }
-                }
-                if (r0 < r12) {
-                    sa[range++] = index0 - 1;
+                if (i < j) {
+                    sa[range++] = index0;
                     i++;
                 } else {
-                    sa[range++] = index12 - 1;
+                    sa[range++] = index12;
                     j++;
                 }
-                done = true;
-            }
-            if (done){
-                continue;
-            }
-            if (nums[index0] < nums[index12]) {
-                sa[range++] = s0[i];
-                i++;
-            } else {
-                sa[range++] = s12[j];
-                j++;
             }
         }
 
         while (i < n0) {
             sa[range++] = s0[i++];
+            i++;
         }
         while (j < n12) {
-            sa[range++] = s12[j++];
+            sa[range++] = sa12[j++];
         }
 
         return sa;
