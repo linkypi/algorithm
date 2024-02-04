@@ -57,28 +57,34 @@ public class MyDC3 {
         int n1 = (n + 1) / 3;
         int n2 = n / 3;
         int n12 = n1 + n2;
+        // important !!!
+        // 使用n02作为S12的长度是因为考虑到后面S0会基于S1来计算，即S1的长度必须与S0长度匹配，
+        // 而实际S0的个数很有可能大于S1的个数。故为了处理此边界问题，可以直接使用S0的长度来代替S1的长度，
+        // 即使S1的长度没有S0长，S1同样的可以通过后面补0来的方式来处理，其结果对最终的排名并未影响
+        int n02 = n0 + n2;
 
         // 为处理边界问题，他们长度都需加上3，防止越界
-        int[] s12 = new int[n12 + 3];
-        int[] sa12 = new int[n12 + 3];
+        int[] s12 = new int[n02 + 3];
+        int[] sa12 = new int[n02 + 3];
 
         // 找到 S12 下标, 基于基数排序, 首先求出S12排名
-        for (int i = 0, j = 0; i < n; i++) {
+        //  important !!! 同样是为配合后面S0的求解，长度必须多出 n0-n1 个 即S1的长度必须与S0长度匹配，不匹配的则补0
+        for (int i = 0, j = 0; i < n + (n0 - n1); i++) {
             if (i % 3 != 0) {
                 s12[j++] = i;
             }
         }
 
         System.out.printf(" custom dc3, before radix sort: %s\n", Arrays.toString(s12));
-        sa12 = radixSort(nums, s12, n12, 2, max);
-        s12 = radixSort(nums, sa12, n12, 1, max);
-        sa12 = radixSort(nums, s12, n12, 0, max);
+        sa12 = radixSort(nums, s12, n02, 2, max);
+        s12 = radixSort(nums, sa12, n02, 1, max);
+        sa12 = radixSort(nums, s12, n02, 0, max);
 
         System.out.printf(" custom dc3, after radix sort: %s\n", Arrays.toString(sa12));
         // 判断排名是否存在重复, 即是否存在相同的子串
         int range = 0;
         int c0 = -1, c1 = -1, c2 = -1;
-        for (int i = 0; i < n12; i++) {
+        for (int i = 0; i < n02; i++) {
             int index = sa12[i];
             if (c0 != nums[index] || c1 != nums[index + 1] || c2 != nums[index + 2]) {
                 range++;
@@ -90,29 +96,30 @@ public class MyDC3 {
             if (sa12[i] % 3 == 1) {
                 s12[sa12[i] / 3] = range;
             } else {
-                s12[sa12[i] / 3 + n1] = range;
+                // S1|S2 由于n1的长度已经使用n0代替，故此处同样需改为 n0
+                s12[sa12[i] / 3 + n0] = range;
             }
         }
 
         // 存在重复则递归重排
-        if (range < n12) {
+        if (range < n02) {
             System.out.printf(" custom dc3, before radix re-sort: %s\n", Arrays.toString(s12));
-            sa12 = skew(s12, n12, range);
-            for (int i = 0; i < n12; i++) {
+            sa12 = skew(s12, n02, range);
+            for (int i = 0; i < n02; i++) {
                 int index = i * 3 + 1;
-                if (index >= n) {
-                    index = (i-n1) * 3 + 2;
+                if (index >= n + n0 - n1) {
+                    index = (i - n0) * 3 + 2;
                 }
                 s12[sa12[i]] = index;
             }
-        }else{
-            int[] temp = new int[n12];
-            for (int i = 0; i < n12; i++) {
-                int index = i*3+1;
-                if(index>=n){
-                    index=(i-n1)*3+2;
+        } else {
+            int[] temp = new int[n02];
+            for (int i = 0; i < n02; i++) {
+                int index = i * 3 + 1;
+                if (index >= n + n0 - n1) {
+                    index = (i - n0) * 3 + 2;
                 }
-                temp[s12[i]-1] = index;
+                temp[s12[i] - 1] = index;
             }
             s12 = temp;
         }
@@ -126,30 +133,11 @@ public class MyDC3 {
         int[] s0 = new int[n0];
         // 仅需遍历 S1 区域得到排名
         int x = 0;
-        for (int j = 0; j < n12; j++) {
+        for (int j = 0; j < n02; j++) {
             if (s12[j] % 3 == 1) {
                 s0[x++] = s12[j] - 1;
             }
-//            int idx = (s12[j] - 1);
-//            s0[j] = idx;
-//                if (r == s12[j]) {
-//                    // 找到排名 j （从0开始）, 通过 j 找到实际索引
-//                    //     S1 | S2
-//                    //     1 4 2 5 <- 模3余1 |  模3余2 的索引组合
-//                    //s12: 2 4 1 3 <- 排名对应的索引，下标为排名
-//                    //此处就是通过s12排名找到最近的模3余0的索引
-//                    int idx = 3 * j + 1; // 1, 4, 7, 10 ...
-//                    s0[idx / 3] = idx - 1;
-//                    break;
-//                }
         }
-        while(x<n0){
-            s0[x++] = x*3;
-        }
-
-//        for (int i = 0, j = 0; i < n0; i++) {
-//            s0[j++] = 3*s12[i]; // 遵循S1在前 S2在后的方式来赋值，此处仅需考虑S1，因为S1在上面已经基于S2得到结果
-//        }
 
         // 首先对比s0的首个字符的排名
         System.out.printf(" custom dc3, before sort s0: %s\n", Arrays.toString(s0));
@@ -162,52 +150,78 @@ public class MyDC3 {
         System.out.printf(" custom dc3, before merge s0: %s\n", Arrays.toString(s0));
         System.out.printf(" custom dc3, before merge s12: %s\n", Arrays.toString(s12));
 
-        // 最后的结果需按照
-        int[] sa = new int[n];
+        // 由于前面为了使用S12结果里求解S0，所以S12实际长度需要补充 n0-n1
+        // 但最终结果需要移除多余的这几个数，因为这几个数都是0值，故后面的排名必定排在最前面
+        // 最后的结果只要移除这几个数即可
+        int[] temp = new int[n + n0 - n1];
         range = 0;
         int i = 0, j = 0;
-        for (; i < n0 && j < n12; ) {
+        for (; i < n0 && j < n02; ) {
             int index0 = s0[i];
-            int index12 = sa12[j];
+            int index12 = s12[j];
             if (nums[index0] < nums[index12]) {
-                sa[range++] = index0;
+                temp[range++] = index0;
                 i++;
                 continue;
             }
-            if(nums[index0] > nums[index12]) {
-                sa[range++] = index12;
+            if (nums[index0] > nums[index12]) {
+                temp[range++] = index12;
                 j++;
                 continue;
             }
 
-            int i0=index0, i12=index12;
+            int i0 = index0, i12 = index12;
             // 头一个字符相同则依次往后对比,最多比较三次即可得到结果
             while (nums[i0] == nums[i12]) {
                 i0++;
                 i12++;
                 // 只要一个出现在 S0 区别，那么只能逐个字符比较，无法利用S12的结果比较
                 if (i0 % 3 == 0 || i12 % 3 == 0) {
+                    if (nums[i0] < nums[i12]) {
+                        temp[range++] = index0;
+                        i++;
+                        break;
+                    }
+                    if (nums[i0] > nums[i12]) {
+                        temp[range++] = index12;
+                        j++;
+                        break;
+                    }
                     continue;
                 }
 
-                if (i < j) {
-                    sa[range++] = index0;
+                int r0 = 0, r12 = 0;
+                for (int k = 0; k < n02; k++) {
+                    if (s12[k] == i0) {
+                        r0 = k;
+                    }
+                    if (s12[k] == i12) {
+                        r12 = k;
+                    }
+                }
+                if (r0 < r12) {
+                    temp[range++] = index0;
                     i++;
                 } else {
-                    sa[range++] = index12;
+                    temp[range++] = index12;
                     j++;
                 }
+                break;
             }
         }
 
         while (i < n0) {
-            sa[range++] = s0[i++];
+            temp[range++] = s0[i++];
             i++;
         }
-        while (j < n12) {
-            sa[range++] = sa12[j++];
+        while (j < n02) {
+            temp[range++] = s12[j++];
         }
-
+        int[] sa = new int[n];
+        // 移除开头的几个补0的数
+        for (int k = n0 - n1, idx = 0; k < n + n0 - n1; k++) {
+            sa[idx++] = temp[k];
+        }
         return sa;
     }
 
