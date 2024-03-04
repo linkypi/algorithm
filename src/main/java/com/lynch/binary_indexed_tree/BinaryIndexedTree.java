@@ -10,8 +10,8 @@ public class BinaryIndexedTree {
     int[] c = null;
 
     public BinaryIndexedTree(int n) {
-        this.n = n;
-        c = new int[n];
+        this.n = n+1;
+        c = new int[n+1];
     }
 
     public int lowbit(int x) {
@@ -27,7 +27,7 @@ public class BinaryIndexedTree {
      * @param value
      */
     public void add(int x, int value) {
-        for (; x < n; x += lowbit(x)) {
+        for (; x <= n; x += lowbit(x)) {
             c[x] += value;
         }
     }
@@ -43,7 +43,7 @@ public class BinaryIndexedTree {
      */
     public int query(int x) {
         int res = 0;
-        for (; x < n; x -= lowbit(x)) {
+        for (; x > 0; x -= lowbit(x)) {
             res += c[x];
         }
         return res;

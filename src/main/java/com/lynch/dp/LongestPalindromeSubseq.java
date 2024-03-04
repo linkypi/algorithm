@@ -2,6 +2,7 @@ package com.lynch.dp;
 
 /**
  * 求最长回文子序列长度
+ * https://leetcode.cn/problems/longest-palindromic-subsequence/description/
  */
 public class LongestPalindromeSubseq {
     public static void main(String[] args) {
@@ -21,24 +22,23 @@ public class LongestPalindromeSubseq {
         int[][] dp = new int[m][m];
         // i j 表示从i到j最长回文子序列长度
         for (int i = 0; i < m; i++) {
-            for (int j = 0; j <= m; j++) {
-                if (i == j) {
-                    dp[i][j] = 1;
-                }
-                // i 超过 j 后无意义，该步骤可以忽略，因为int元素默认为0
-                if (i > j) {
-                    dp[i][j] = 0;
-                }
-            }
+            dp[i][i] = 1;
         }
 
-        for (int i = m - 2; i > -1; i--) {
-            for (int j = i + 1; j < m; j++) {
-                if (i == j) {
-                    dp[i][j] = dp[i + 1][j - 1] + 2;
+        // 仅需遍历左下三角部分
+        for (int k = 1; k < m; k++) {
+            int j = k;
+            for (int i = 0; i < m - k; i++) {
+                if (str.charAt(i) == str.charAt(j)) {
+                    if (i + 1 == j) {
+                        dp[i][j] = 2;
+                    } else {
+                        dp[i][j] = dp[i + 1][j - 1] + 2;
+                    }
                 } else {
                     dp[i][j] = Math.max(dp[i][j - 1], dp[i + 1][j]);
                 }
+                j++;
             }
         }
         return dp[0][m - 1];

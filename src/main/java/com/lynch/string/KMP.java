@@ -6,8 +6,11 @@ public class KMP {
     @Test
     public void test() {
 
-        String source = "abgabeabeabxgt";
-        String match = "abeabx";
+//         String source = "abgabeabeabxgt";
+//         String match = "abeabx";
+
+        String source =  "aabaaabaaac";
+        String match = "aabaaac";
         int index = find(source.toCharArray(), match.toCharArray());
         System.out.println("index: "+ index);
     }
@@ -34,7 +37,7 @@ public class KMP {
                 p2 = next[p2];
             }
         }
-        return p2 == match.length ? p2 - p1 : -1;
+        return p2 == match.length ? p1 -p2 : -1;
     }
 
     /**

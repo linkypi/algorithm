@@ -35,6 +35,7 @@ public class MonotonousStack {
 
         // 栈底到栈顶由小到大
         Stack<Integer> stack = new Stack<>();
+        // 记录result[i] 左边离它最近的且比它小的数为 result[i][0], 右边边离它最近的且比它小的数为 result[i][1]
         int[][] result = new int[notDuplicateArr.length][2];
 
         for (int i = 0; i< notDuplicateArr.length; i++) {

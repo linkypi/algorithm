@@ -14,12 +14,14 @@ public class DC3Test {
 
     @Test
     public void TestDC3() throws InterruptedException {
-        String str = "mississippi";
+//        String str = "abaea"; // [5,1,3,2,4]
+        String str = "oapomnheygxk"; // [1, 7, 9, 6, 11, 4, 5, 0, 3, 2, 10, 8]
+//        String str = "mississippi";
         int[] arr = new int[str.length()];
         for (int i = 0; i < str.length(); i++) {
             arr[i] = str.charAt(i) - 'a';
         }
-        DC3 dc3 = new DC3(arr, 's' - 'a');
+        DC3 dc3 = new DC3(arr, 'z' - 'a');
         System.out.printf("       dc3: %s\n",Arrays.toString(dc3.sa));
 
 //        Thread.sleep(200);

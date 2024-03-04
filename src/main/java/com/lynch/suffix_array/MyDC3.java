@@ -92,7 +92,7 @@ public class MyDC3 {
                 c1 = nums[index + 1];
                 c2 = nums[index + 2];
             }
-            // 将排名结果放到 S12, S1 在前,S2 在后
+            // 将排名结果放到 S12, S1 在前, S2 在后: [S1|S2]
             if (sa12[i] % 3 == 1) {
                 s12[sa12[i] / 3] = range;
             } else {
@@ -113,6 +113,7 @@ public class MyDC3 {
                 s12[sa12[i]] = index;
             }
         } else {
+            // 没有重复排名则将 [S1|S2] 还原
             int[] temp = new int[n02];
             for (int i = 0; i < n02; i++) {
                 int index = i * 3 + 1;
